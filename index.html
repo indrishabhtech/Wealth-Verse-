@@ -1,113 +1,194 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>WealthVerse</title>
+
 <style>
-    body {
-        font-family: Arial;
-        background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-        color: white;
-        text-align: center;
-    }
+body {
+    margin:0;
+    font-family: 'Segoe UI';
+    background: #0f172a;
+    color: white;
+}
 
-    .card {
-        background: rgba(255,255,255,0.1);
-        padding: 20px;
-        margin: 15px;
-        border-radius: 15px;
-        backdrop-filter: blur(10px);
-        transition: 0.3s;
-    }
+/* NAV */
+.nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background: #020617;
+    padding: 10px;
+}
 
-    .card:hover {
-        transform: scale(1.03);
-    }
+.nav button {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 16px;
+}
 
-    button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 10px;
-        background: #00c6ff;
-        color: white;
-        cursor: pointer;
-    }
+.nav button.active {
+    color: #38bdf8;
+}
 
-    .money {
-        font-size: 30px;
-        margin: 20px;
-        transition: 0.2s;
-    }
+/* SCREEN */
+.screen {
+    display: none;
+    padding: 20px;
+    padding-bottom: 80px;
+}
 
-    .flash {
-        color: #00ff88;
-        transform: scale(1.2);
-    }
+.activeScreen {
+    display: block;
+}
+
+/* CARD */
+.card {
+    background: linear-gradient(145deg,#1e293b,#0f172a);
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* MONEY */
+.money {
+    font-size: 28px;
+    text-align:center;
+    margin: 15px;
+}
+
+/* BUTTON */
+.btn {
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #38bdf8;
+    color: white;
+    margin: 5px;
+}
+
+/* ANIMATION */
+.fade {
+    animation: fade 0.4s;
+}
+
+@keyframes fade {
+    from {opacity:0; transform: translateY(10px);}
+    to {opacity:1; transform: translateY(0);}
+}
+
+/* THEME */
+.light {
+    background: #f1f5f9;
+    color: black;
+}
 </style>
+
 </head>
 <body>
 
-<h1>💼 WealthVerse</h1>
-
+<h2 style="text-align:center;">💼 WealthVerse</h2>
 <div class="money" id="money">₹0</div>
 
-<div class="card">
-    <h2>💰 Earn</h2>
-    <button onclick="earn()">Tap to Earn ₹100</button>
+<!-- HOME -->
+<div id="home" class="screen activeScreen fade">
+    <div class="card">
+        <h3>💰 Earn</h3>
+        <button class="btn" onclick="earn()">Tap +₹100</button>
+    </div>
+
+    <div class="card">
+        <h3>🏢 Business</h3>
+        Income: ₹<span id="income">0</span>/sec<br>
+        <button class="btn" onclick="buyBusiness()">Buy (₹5000)</button>
+    </div>
 </div>
 
-<div class="card">
-    <h2>🏢 Business</h2>
-    <p>Income: ₹<span id="income">0</span>/sec</p>
-    <button onclick="buyBusiness()">Buy Business (₹5000)</button>
+<!-- STOCK -->
+<div id="stocks" class="screen fade">
+    <div class="card">
+        <h3>📈 ITC</h3>
+        Price: ₹<span id="itcPrice"></span><br>
+        Owned: <span id="itcQty"></span><br>
+        <button class="btn" onclick="buyStock()">Buy</button>
+        <button class="btn" onclick="sellStock()">Sell</button>
+    </div>
+
+    <div class="card">
+        <h3>📊 Market Status</h3>
+        <span id="marketStatus">Loading...</span>
+    </div>
 </div>
 
-<div class="card">
-    <h2>📈 Stocks</h2>
-    <p>ITC Price: ₹<span id="itcPrice">450</span></p>
-    <p>You Own: <span id="itcQty">0</span></p>
-    <button onclick="buyStock()">Buy ITC</button>
-    <button onclick="sellStock()">Sell ITC</button>
+<!-- SETTINGS -->
+<div id="settings" class="screen fade">
+    <div class="card">
+        <h3>🎨 Theme</h3>
+        <button class="btn" onclick="setTheme('dark')">Dark</button>
+        <button class="btn" onclick="setTheme('light')">Light</button>
+    </div>
+
+    <div class="card">
+        <h3>💾 Save</h3>
+        <button class="btn" onclick="resetGame()">Reset Game</button>
+    </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+    <button onclick="switchScreen('home', this)" class="active">Home</button>
+    <button onclick="switchScreen('stocks', this)">Stocks</button>
+    <button onclick="switchScreen('settings', this)">Settings</button>
 </div>
 
 <script>
 
+// GAME STATE
 let game = {
     money: 1000,
     income: 0,
+    itcPrice: 450,
     itcQty: 0,
-    itcPrice: 450
+    theme: 'dark'
 };
 
-// Load
-function loadGame(){
-    let saved = localStorage.getItem("wealthverse");
-    if(saved) game = JSON.parse(saved);
-}
-loadGame();
+// LOAD
+let saved = localStorage.getItem("wealthverse");
+if(saved) game = JSON.parse(saved);
 
-// Save
-function saveGame(){
+// SAVE
+function save(){
     localStorage.setItem("wealthverse", JSON.stringify(game));
 }
 
-// Update UI
+// UI UPDATE
 function updateUI(){
     document.getElementById("money").innerText = "₹" + game.money.toFixed(0);
     document.getElementById("income").innerText = game.income;
+    document.getElementById("itcPrice").innerText = game.itcPrice.toFixed(2);
     document.getElementById("itcQty").innerText = game.itcQty;
-    document.getElementById("itcPrice").innerText = game.itcPrice;
 }
 
-// Tap earn
+// NAVIGATION
+function switchScreen(id, btn){
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("activeScreen"));
+    document.getElementById(id).classList.add("activeScreen");
+
+    document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+}
+
+// EARN
 function earn(){
     game.money += 100;
-    flashMoney();
     updateUI();
 }
 
-// Buy business
+// BUSINESS
 function buyBusiness(){
     if(game.money >= 5000){
         game.money -= 5000;
@@ -116,7 +197,7 @@ function buyBusiness(){
     updateUI();
 }
 
-// Stocks
+// STOCK
 function buyStock(){
     if(game.money >= game.itcPrice){
         game.money -= game.itcPrice;
@@ -133,29 +214,55 @@ function sellStock(){
     updateUI();
 }
 
-// Passive income
+// PASSIVE INCOME
 setInterval(()=>{
     game.money += game.income;
     updateUI();
-    saveGame();
+    save();
 },1000);
 
-// Fake stock movement
-setInterval(()=>{
-    let change = (Math.random() - 0.5) * 5;
-    game.itcPrice = Math.max(100, game.itcPrice + change);
-    updateUI();
-},2000);
-
-// Animation
-function flashMoney(){
-    let el = document.getElementById("money");
-    el.classList.add("flash");
-    setTimeout(()=> el.classList.remove("flash"),200);
+// REAL STOCK API (OPTIONAL)
+async function fetchStock(){
+    try {
+        let res = await fetch("https://api.twelvedata.com/price?symbol=ITC.NSE&apikey=demo");
+        let data = await res.json();
+        if(data.price){
+            game.itcPrice = parseFloat(data.price);
+            document.getElementById("marketStatus").innerText = "Live Data ✅";
+        }
+    } catch {
+        document.getElementById("marketStatus").innerText = "Offline Mode ⚠️";
+    }
 }
 
-// Init
+// FALLBACK SIMULATION
+setInterval(()=>{
+    let change = (Math.random()-0.5)*3;
+    game.itcPrice = Math.max(100, game.itcPrice + change);
+    updateUI();
+},3000);
+
+// THEME
+function setTheme(t){
+    game.theme = t;
+    if(t === 'light'){
+        document.body.classList.add("light");
+    } else {
+        document.body.classList.remove("light");
+    }
+    save();
+}
+
+// RESET
+function resetGame(){
+    localStorage.clear();
+    location.reload();
+}
+
+// INIT
 updateUI();
+fetchStock();
+setInterval(fetchStock, 15000);
 
 </script>
 
