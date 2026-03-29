@@ -1,1 +1,163 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WealthVerse</title>
+<style>
+    body {
+        font-family: Arial;
+        background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+        color: white;
+        text-align: center;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        margin: 15px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: scale(1.03);
+    }
+
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background: #00c6ff;
+        color: white;
+        cursor: pointer;
+    }
+
+    .money {
+        font-size: 30px;
+        margin: 20px;
+        transition: 0.2s;
+    }
+
+    .flash {
+        color: #00ff88;
+        transform: scale(1.2);
+    }
+</style>
+</head>
+<body>
+
+<h1>💼 WealthVerse</h1>
+
+<div class="money" id="money">₹0</div>
+
+<div class="card">
+    <h2>💰 Earn</h2>
+    <button onclick="earn()">Tap to Earn ₹100</button>
+</div>
+
+<div class="card">
+    <h2>🏢 Business</h2>
+    <p>Income: ₹<span id="income">0</span>/sec</p>
+    <button onclick="buyBusiness()">Buy Business (₹5000)</button>
+</div>
+
+<div class="card">
+    <h2>📈 Stocks</h2>
+    <p>ITC Price: ₹<span id="itcPrice">450</span></p>
+    <p>You Own: <span id="itcQty">0</span></p>
+    <button onclick="buyStock()">Buy ITC</button>
+    <button onclick="sellStock()">Sell ITC</button>
+</div>
+
+<script>
+
+let game = {
+    money: 1000,
+    income: 0,
+    itcQty: 0,
+    itcPrice: 450
+};
+
+// Load
+function loadGame(){
+    let saved = localStorage.getItem("wealthverse");
+    if(saved) game = JSON.parse(saved);
+}
+loadGame();
+
+// Save
+function saveGame(){
+    localStorage.setItem("wealthverse", JSON.stringify(game));
+}
+
+// Update UI
+function updateUI(){
+    document.getElementById("money").innerText = "₹" + game.money.toFixed(0);
+    document.getElementById("income").innerText = game.income;
+    document.getElementById("itcQty").innerText = game.itcQty;
+    document.getElementById("itcPrice").innerText = game.itcPrice;
+}
+
+// Tap earn
+function earn(){
+    game.money += 100;
+    flashMoney();
+    updateUI();
+}
+
+// Buy business
+function buyBusiness(){
+    if(game.money >= 5000){
+        game.money -= 5000;
+        game.income += 50;
+    }
+    updateUI();
+}
+
+// Stocks
+function buyStock(){
+    if(game.money >= game.itcPrice){
+        game.money -= game.itcPrice;
+        game.itcQty++;
+    }
+    updateUI();
+}
+
+function sellStock(){
+    if(game.itcQty > 0){
+        game.money += game.itcPrice;
+        game.itcQty--;
+    }
+    updateUI();
+}
+
+// Passive income
+setInterval(()=>{
+    game.money += game.income;
+    updateUI();
+    saveGame();
+},1000);
+
+// Fake stock movement
+setInterval(()=>{
+    let change = (Math.random() - 0.5) * 5;
+    game.itcPrice = Math.max(100, game.itcPrice + change);
+    updateUI();
+},2000);
+
+// Animation
+function flashMoney(){
+    let el = document.getElementById("money");
+    el.classList.add("flash");
+    setTimeout(()=> el.classList.remove("flash"),200);
+}
+
+// Init
+updateUI();
+
+</script>
+
+</body>
+</html>
