@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DHAN EMPIRE — Real Business Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060D1A;--bg2:#0C1628;--card:#101E30;--card2:#162238;
+  --border:#1C2D42;--border2:#243548;
+  --primary:#00C6FF;--primary-dim:rgba(0,198,255,0.12);
+  --green:#00E676;--green-dim:rgba(0,230,118,0.1);
+  --red:#FF4062;--red-dim:rgba(255,64,98,0.1);
+  --gold:#FFB800;--gold-dim:rgba(255,184,0,0.12);
+  --purple:#A855F7;
+  --text:#E8F2FF;--muted:#3A5470;--muted2:#5A7A9A;
+  --nav:#08111F;
+  --g1:linear-gradient(135deg,#00C6FF 0%,#5B2EFF 100%);
+  --g2:linear-gradient(135deg,#00E676 0%,#00B4D8 100%);
+  --g3:linear-gradient(135deg,#FFB800 0%,#FF5722 100%);
+  --g4:linear-gradient(135deg,#A855F7 0%,#EC4899 100%);
+  --font:'Outfit',sans-serif;--font-d:'Syne',sans-serif;--font-m:'JetBrains Mono',monospace;
+}
+[data-theme="light"]{
+  --bg:#EEF2FF;--bg2:#E4EAFF;--card:#FFFFFF;--card2:#F5F8FF;
+  --border:#D0DCFF;--border2:#C0CCEE;--text:#0A1428;
+  --muted:#8090BB;--muted2:#5A6A9A;--nav:#FFFFFF;
+}
+[data-theme="gold"]{
+  --bg:#0A0800;--bg2:#140F00;--card:#1C1600;--card2:#261E00;
+  --border:#302400;--border2:#402E00;--primary:#FFB800;--primary-dim:rgba(255,184,0,0.12);
+  --g1:linear-gradient(135deg,#FFB800 0%,#FF6B35 100%);
+  --text:#FFF8E0;--muted:#5A4400;--muted2:#8A6600;--nav:#0E0B00;
+}
+[data-theme="saffron"]{
+  --bg:#100500;--bg2:#1C0A00;--card:#241200;--card2:#301A00;
+  --border:#3C1E00;--border2:#4E2800;--primary:#FF6B00;--primary-dim:rgba(255,107,0,0.15);
+  --g1:linear-gradient(135deg,#FF6B00 0%,#DC2626 100%);
+  --g2:linear-gradient(135deg,#22C55E 0%,#16A34A 100%);
+  --text:#FFF0E0;--muted:#5A2A00;--muted2:#7A3A00;--nav:#140700;
+}
+[data-theme="neon"]{
+  --bg:#000508;--bg2:#000E18;--card:#001428;--card2:#001E36;
+  --border:#003050;--border2:#004060;--primary:#00FFF0;--primary-dim:rgba(0,255,240,0.1);
+  --green:#39FF14;--gold:#FFE600;
+  --g1:linear-gradient(135deg,#00FFF0 0%,#FF00FF 100%);
+  --text:#D0FFFF;--muted:#004A5A;--muted2:#006A7A;--nav:#000810;
+}
+[data-theme="midnight"]{
+  --bg:#0D0D1A;--bg2:#12122A;--card:#181830;--card2:#1E1E3A;
+  --border:#252548;--border2:#2E2E56;--primary:#818CF8;--primary-dim:rgba(129,140,248,0.12);
+  --g1:linear-gradient(135deg,#818CF8 0%,#EC4899 100%);
+  --text:#E0E0FF;--muted:#303060;--muted2:#505090;--nav:#0A0A18;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);
+  max-width:440px;margin:0 auto;height:100%;overflow:hidden;position:relative;font-size:14px}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-thumb{background:var(--primary);border-radius:2px}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.3rem}
+.sp-emoji{font-size:4.5rem;animation:sp-pulse 2s ease-in-out infinite}
+@keyframes sp-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08) rotate(4deg)}}
+.sp-title{font-family:var(--font-d);font-size:2.8rem;font-weight:800;letter-spacing:2px;
+  background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sp-sub{color:var(--muted2);font-size:0.7rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:1.5rem}
+.sp-bar-wrap{width:240px;height:3px;background:var(--border2);border-radius:2px;overflow:hidden}
+.sp-bar{height:100%;width:0;background:var(--g1);border-radius:2px;transition:width 0.4s ease}
+.sp-status{color:var(--muted);font-family:var(--font-m);font-size:0.68rem;margin-top:0.8rem;min-height:1rem}
+
+/* APP */
+#app{display:none;flex-direction:column;height:100%;overflow:hidden}
+
+/* HEADER */
+.header{background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0.65rem 0.9rem 0.55rem;flex-shrink:0;z-index:50}
+.hdr-row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem}
+.brand{font-family:var(--font-d);font-size:1.2rem;font-weight:800;letter-spacing:1px;
+  background:var(--g1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-btns{display:flex;gap:0.45rem}
+.hdr-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border2);
+  background:var(--card2);color:var(--muted2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:0.8rem;transition:all 0.2s}
+.hdr-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim)}
+.hdr-fortune{display:flex;align-items:center;justify-content:space-between;gap:0.8rem}
+.hf-item{flex:1;text-align:center}
+.hf-lbl{font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+.hf-val{font-family:var(--font-m);font-size:1.05rem;font-weight:600;color:var(--text);letter-spacing:-0.5px;line-height:1.2}
+.hf-sub{font-size:0.65rem;color:var(--green);font-family:var(--font-m)}
+.hf-div{width:1px;height:32px;background:var(--border2)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:0.5rem}
+
+/* NAV */
+.nav{background:var(--nav);border-top:1px solid var(--border);
+  display:flex;flex-shrink:0;padding:0.25rem 0}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:0.18rem;
+  padding:0.3rem 0;cursor:pointer;position:relative;transition:all 0.2s}
+.nav-item i{font-size:0.95rem;color:var(--muted);transition:color 0.2s}
+.nav-item span{font-size:0.55rem;color:var(--muted);transition:color 0.2s;text-transform:uppercase;letter-spacing:0.5px}
+.nav-item.active i,.nav-item.active span{color:var(--primary)}
+.nav-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:24px;height:2px;background:var(--primary);border-radius:0 0 2px 2px}
+.nav-badge{position:absolute;top:0;right:calc(50% - 16px);
+  background:var(--red);color:#fff;font-size:0.5rem;
+  padding:1px 4px;border-radius:8px;font-weight:700}
+
+/* SECTIONS */
+.section{display:none;flex-direction:column;gap:0.85rem;padding:0.85rem;animation:sec-in 0.22s ease}
+.section.active{display:flex}
+@keyframes sec-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem;transition:box-shadow 0.2s}
+.card-sm{padding:0.75rem}
+.card-xs{padding:0.55rem 0.75rem}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.25)}
+
+/* HERO CARDS */
+.hero-card{border-radius:16px;padding:1.2rem;color:#fff;position:relative;overflow:hidden;border:none}
+.hero-card::before{content:'';position:absolute;top:-30%;right:-10%;width:180px;height:180px;
+  background:rgba(255,255,255,0.06);border-radius:50%}
+.hero-card::after{content:'';position:absolute;bottom:-25%;left:-8%;width:140px;height:140px;
+  background:rgba(255,255,255,0.04);border-radius:50%}
+.hero-label{font-size:0.65rem;opacity:0.75;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.3rem;position:relative}
+.hero-val{font-family:var(--font-m);font-size:1.65rem;font-weight:600;letter-spacing:-1px;line-height:1;position:relative}
+.hero-sub{font-size:0.75rem;margin-top:0.25rem;opacity:0.85;position:relative}
+.hero-divider{border:none;border-top:1px solid rgba(255,255,255,0.18);margin:0.85rem 0;position:relative}
+
+/* TABS */
+.tabs{display:flex;background:var(--card2);border-radius:11px;padding:3px;gap:2px;border:1px solid var(--border)}
+.tab{flex:1;text-align:center;padding:0.42rem 0.3rem;border-radius:8px;
+  font-size:0.72rem;cursor:pointer;color:var(--muted2);font-weight:600;transition:all 0.2s}
+.tab.active{background:var(--primary);color:#fff}
+
+/* CHIPS */
+.chips{display:flex;gap:0.45rem;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{display:inline-block;padding:0.22rem 0.6rem;border-radius:20px;font-size:0.66rem;
+  font-weight:600;background:var(--card2);color:var(--muted2);border:1px solid var(--border2);
+  cursor:pointer;white-space:nowrap;transition:all 0.2s;flex-shrink:0}
+.chip.active,.chip:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* BUTTONS */
+.btn{padding:0.5rem 1rem;border-radius:10px;border:none;font-family:var(--font);
+  font-weight:600;cursor:pointer;transition:all 0.18s;font-size:0.8rem;
+  display:inline-flex;align-items:center;gap:0.4rem;justify-content:center;flex-shrink:0}
+.btn-p{background:var(--primary);color:#000}
+.btn-p:hover{opacity:0.88;transform:scale(1.02)}
+.btn-s{background:var(--green);color:#000}
+.btn-d{background:var(--red-dim);color:var(--red);border:1px solid var(--red)}
+.btn-o{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-o:hover{border-color:var(--primary);color:var(--primary)}
+.btn-g{background:var(--g1);color:#fff}
+.btn-sm{padding:0.3rem 0.7rem;font-size:0.68rem;border-radius:8px}
+.btn-fw{width:100%}
+
+/* STOCK ROW */
+.srow{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0;
+  border-bottom:1px solid var(--border);cursor:pointer;transition:all 0.18s}
+.srow:last-child{border-bottom:none}
+.srow:hover{background:var(--card2);margin:0 -0.9rem;padding:0.65rem 0.9rem;border-radius:10px}
+.srow-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:0.95rem;flex-shrink:0;border:1px solid rgba(255,255,255,0.07)}
+.srow-info{flex:1;min-width:0}
+.srow-name{font-weight:600;font-size:0.83rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow-sub{font-size:0.66rem;color:var(--muted2)}
+.srow-right{text-align:right;flex-shrink:0}
+.srow-price{font-family:var(--font-m);font-weight:600;font-size:0.88rem}
+.srow-chg{font-size:0.65rem;font-family:var(--font-m)}
+
+/* COLORS */
+.pos{color:var(--green)}.neg{color:var(--red)}.gold-c{color:var(--gold)}
+.pc{color:var(--primary)}.mc{color:var(--muted2)}
+
+/* BIZ CARD */
+.biz-card{display:flex;align-items:center;gap:0.85rem;padding:0.85rem;
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  cursor:pointer;transition:all 0.2s;margin-bottom:0.65rem}
+.biz-card:hover{border-color:var(--primary);transform:translateX(3px)}
+.biz-icon{width:44px;height:44px;border-radius:11px;display:flex;
+  align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.biz-info{flex:1;min-width:0}
+.biz-name{font-weight:700;font-size:0.85rem}
+.biz-type{font-size:0.66rem;color:var(--muted2)}
+.biz-income{font-size:0.78rem;font-weight:600;color:var(--green);font-family:var(--font-m)}
+.biz-actions{display:flex;flex-direction:column;gap:0.35rem;align-items:flex-end}
+
+/* CLICKER */
+.clicker-area{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:1.3rem;text-align:center}
+.click-btn{width:130px;height:130px;border-radius:50%;background:var(--g1);border:none;
+  cursor:pointer;font-size:2.8rem;display:flex;align-items:center;justify-content:center;
+  margin:0.9rem auto;transition:all 0.1s;
+  box-shadow:0 0 36px rgba(0,198,255,0.2),0 0 0 6px rgba(0,198,255,0.06);position:relative;overflow:hidden}
+.click-btn:active{transform:scale(0.88)}
+.click-btn::after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:rgba(255,255,255,0);transition:background 0.12s}
+.click-btn:active::after{background:rgba(255,255,255,0.12)}
+
+/* FLOAT MONEY */
+.float-coin{position:fixed;font-size:0.95rem;font-weight:700;color:var(--green);
+  pointer-events:none;z-index:9990;font-family:var(--font-m);
+  animation:float-up 1s ease-out forwards}
+@keyframes float-up{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(1.4)}}
+
+/* NOTIF */
+.notif{position:fixed;top:0.9rem;left:50%;transform:translateX(-50%);
+  background:var(--card);border:1px solid var(--primary);border-radius:12px;
+  padding:0.65rem 1.1rem;z-index:9998;box-shadow:0 4px 20px rgba(0,198,255,0.15);
+  font-size:0.8rem;font-weight:500;text-align:center;white-space:nowrap;
+  animation:notif-a 3s ease forwards;max-width:90vw}
+@keyframes notif-a{0%{opacity:0;top:-2rem}10%{opacity:1;top:0.9rem}80%{opacity:1;top:0.9rem}100%{opacity:0;top:-2rem}}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:200;
+  display:none;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex;animation:ov-in 0.2s ease}
+@keyframes ov-in{from{opacity:0}to{opacity:1}}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:1.2rem;
+  width:100%;max-width:440px;max-height:90vh;overflow-y:auto;
+  animation:modal-up 0.28s cubic-bezier(0.34,1.56,0.64,1);
+  border-top:1px solid var(--border2)}
+@keyframes modal-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-drag{width:36px;height:3px;background:var(--border2);border-radius:2px;margin:0 auto 1rem}
+.modal-title{font-size:1rem;font-weight:700;margin-bottom:0.9rem}
+.modal-close{float:right;background:none;border:none;color:var(--muted2);font-size:1.1rem;cursor:pointer;padding:0}
+
+/* RANKINGS */
+.rank-row{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.8rem;
+  border-radius:10px;margin-bottom:0.45rem;background:var(--card2);
+  border:1px solid var(--border);transition:all 0.2s}
+.rank-row.me{background:var(--primary-dim);border-color:var(--primary)}
+.rank-num{width:26px;text-align:center;font-weight:700;font-size:0.82rem;color:var(--muted2);font-family:var(--font-m)}
+.rank-num.g{color:#FFD700}.rank-num.s{color:#C0C0C0}.rank-num.b{color:#CD7F32}
+.rank-av{width:34px;height:34px;border-radius:50%;background:var(--g1);
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;
+  font-size:0.82rem;flex-shrink:0}
+.rank-info{flex:1;min-width:0}
+.rank-name{font-weight:600;font-size:0.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-type{font-size:0.65rem;color:var(--muted2)}
+.rank-worth{font-family:var(--font-m);font-size:0.8rem;font-weight:600;flex-shrink:0}
+
+/* MISC */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.7rem}
+.sec-title{font-size:0.88rem;font-weight:700;color:var(--text)}
+.sec-link{font-size:0.72rem;color:var(--primary);cursor:pointer;font-weight:500}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;
+  border-bottom:1px solid var(--border);font-size:0.8rem}
+.stat-row:last-child{border-bottom:none}
+.stat-lbl{color:var(--muted2)}.stat-v{font-weight:600;font-family:var(--font-m)}
+.progress-wrap{height:5px;background:var(--border2);border-radius:3px;overflow:hidden;margin:0.4rem 0}
+.progress-fill{height:100%;background:var(--g1);border-radius:3px;transition:width 0.5s ease}
+.input-wrap{margin-bottom:0.85rem}
+.input-lbl{font-size:0.72rem;color:var(--muted2);margin-bottom:0.3rem;display:block;font-weight:500}
+.input-f{width:100%;padding:0.55rem 0.85rem;background:var(--card2);border:1px solid var(--border2);
+  border-radius:9px;color:var(--text);font-size:0.85rem;outline:none;
+  transition:border-color 0.2s;font-family:var(--font)}
+.input-f:focus{border-color:var(--primary)}
+select.input-f{cursor:pointer}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem}
+.flex{display:flex}.flex-c{align-items:center}.flex-b{justify-content:space-between}
+.gap-1{gap:0.5rem}.gap-2{gap:0.9rem}
+.mt1{margin-top:0.5rem}.mt2{margin-top:0.9rem}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.scroll-x::-webkit-scrollbar{display:none}
+.spinner{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--primary);
+  border-radius:50%;animation:spin 0.6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);
+  display:inline-block;animation:ldot 1.4s ease-in-out infinite}
+@keyframes ldot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.6)}}
+.badge{display:inline-flex;align-items:center;gap:2px;padding:0.13rem 0.42rem;
+  border-radius:6px;font-size:0.65rem;font-weight:700;font-family:var(--font-m)}
+.badge-up{background:var(--green-dim);color:var(--green)}
+.badge-down{background:var(--red-dim);color:var(--red)}
+.badge-gold{background:var(--gold-dim);color:var(--gold)}
+.badge-primary{background:var(--primary-dim);color:var(--primary)}
+.theme-sw{width:40px;height:40px;border-radius:50%;border:2px solid transparent;
+  cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.theme-sw.active{border-color:var(--text);transform:scale(1.15)}
+.item-cat{border-radius:13px;height:82px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;
+  border:1px solid var(--border2);position:relative;overflow:hidden}
+.item-cat:hover{transform:scale(1.04);border-color:var(--primary)}
+.item-cat-em{font-size:1.9rem}
+.item-cat-lbl{font-size:0.62rem;font-weight:700;margin-top:0.18rem;text-align:center}
+.item-cat-cnt{font-size:0.57rem;color:var(--muted2);font-family:var(--font-m)}
+.card-vis{min-width:185px;border-radius:13px;padding:0.85rem;color:#fff;
+  position:relative;overflow:hidden;flex-shrink:0;transition:transform 0.2s}
+.card-vis:hover{transform:scale(1.03)}
+.cv-tier{font-size:0.58rem;opacity:0.65;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:0.6rem}
+.cv-num{font-family:var(--font-m);font-size:0.68rem;letter-spacing:2px;margin-bottom:0.6rem;opacity:0.8}
+.cv-bal-l{font-size:0.6rem;opacity:0.65}
+.cv-bal{font-family:var(--font-m);font-size:0.9rem;font-weight:600}
+.cv-shine{position:absolute;top:0;right:0;width:80px;height:80px;
+  background:rgba(255,255,255,0.05);border-radius:50%;transform:translate(20%,-30%)}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-emoji">💰</div>
+  <div class="sp-title">DHAN EMPIRE</div>
+  <div class="sp-sub">Real Life Business Simulator</div>
+  <div class="sp-bar-wrap"><div class="sp-bar" id="sp-bar"></div></div>
+  <div class="sp-status" id="sp-status">Initialising…</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="hdr-row1">
+      <div class="brand">💰 DHAN EMPIRE</div>
+      <div class="hdr-btns">
+        <div class="hdr-btn" onclick="openRankings()" title="Rankings">🏆</div>
+        <div class="hdr-btn" onclick="openSettings()" title="Settings">⚙️</div>
+      </div>
+    </div>
+    <div class="hdr-fortune">
+      <div class="hf-item">
+        <div class="hf-lbl">Fortune</div>
+        <div class="hf-val" id="hdr-fortune">₹0</div>
+      </div>
+      <div class="hf-div"></div>
+      <div class="hf-item">
+        <div class="hf-lbl">Cash</div>
+        <div class="hf-val" id="hdr-cash">₹0</div>
+      </div>
+      <div class="hf-div"></div>
+      <div class="hf-item">
+        <div class="hf-lbl">Income/hr</div>
+        <div class="hf-val pos" id="hdr-income">₹0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="main-content">
+
+    <!-- ══ INVESTING ══ -->
+    <div id="sec-investing" class="section active">
+      <div class="tabs">
+        <div class="tab active" onclick="switchInvTab('shares',this)">📈 Shares</div>
+        <div class="tab" onclick="switchInvTab('realestate',this)">🏢 Real Estate</div>
+        <div class="tab" onclick="switchInvTab('crypto',this)">₿ Crypto</div>
+      </div>
+
+      <!-- SHARES -->
+      <div id="inv-shares">
+        <div class="hero-card" style="background:var(--g1)">
+          <div class="flex flex-b flex-c" style="position:relative">
+            <div>
+              <div class="hero-label">📊 Stock Portfolio</div>
+              <div class="hero-val" id="stock-port-val">₹0.00</div>
+              <div class="hero-sub" id="stock-port-chg">Add stocks to begin</div>
+            </div>
+            <div style="text-align:right">
+              <span class="live-dot"></span>
+              <span style="font-size:0.62rem;opacity:0.75;margin-left:4px">NSE LIVE</span><br>
+              <span style="font-size:0.68rem;opacity:0.7;font-family:var(--font-m)" id="mkt-time">--:--</span>
+            </div>
+          </div>
+          <hr class="hero-divider">
+          <div class="flex flex-b" style="position:relative">
+            <div>
+              <div style="font-size:0.62rem;opacity:0.7">Annual Dividend</div>
+              <div style="font-family:var(--font-m);font-size:1rem;font-weight:600;margin-top:0.15rem" id="stock-div">₹0/yr</div>
+            </div>
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:#fff;border:none" onclick="openStockMarket()">Trade →</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="sec-hdr">
+            <div class="sec-title">My Holdings</div>
+            <span class="sec-link" onclick="openAllHoldings()">View all →</span>
+          </div>
+          <div id="holdings-preview">
+            <div style="text-align:center;color:var(--muted2);padding:1.5rem 0;font-size:0.82rem">
+              No stocks yet. Buy from the market →
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="sec-hdr">
+            <div class="sec-title">💎 Top Dividend Stocks</div>
+            <span class="sec-link" onclick="openDivStocks()">All →</span>
+          </div>
+          <div id="div-preview">
+            <div class="flex flex-c gap-1" style="padding:0.5rem 0"><span class="spinner"></span><span style="color:var(--muted2);font-size:0.78rem">Loading live data…</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="sec-hdr">
+            <div class="sec-title">🚀 Growth Leaders</div>
+            <span class="sec-link" onclick="openGrowthStocks()">All →</span>
+          </div>
+          <div id="growth-preview">
+            <div class="flex flex-c gap-1" style="padding:0.5rem 0"><span class="spinner"></span><span style="color:var(--muted2);font-size:0.78rem">Loading…</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REAL ESTATE -->
+      <div id="inv-realestate" style="display:none">
+        <div class="hero-card" style="background:var(--g2)">
+          <div class="hero-label">🏢 Real Estate Portfolio</div>
+          <div class="hero-val" id="re-port-val">₹0</div>
+          <hr class="hero-divider">
+          <div class="flex flex-b" style="position:relative">
+            <div>
+              <div style="font-size:0.62rem;opacity:0.7">Monthly Rental</div>
+              <div style="font-family:var(--font-m);font-size:1rem;font-weight:600;margin-top:0.15rem" id="re-rental">₹0/mo</div>
+            </div>
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:#fff;border:none" onclick="openREMarket()">Buy Property →</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-title" style="margin-bottom:0.75rem">🏗️ My Properties</div>
+          <div id="my-properties"><div style="text-align:center;color:var(--muted2);padding:1.5rem 0;font-size:0.82rem">No properties yet.</div></div>
+        </div>
+        <div class="card" style="cursor:pointer;background:var(--g2);border:none" onclick="openREMarket()">
+          <div class="flex flex-b flex-c" style="color:#fff">
+            <div><div style="font-weight:700">Real Estate Market</div><div style="font-size:0.72rem;opacity:0.8">Pan-India residential & commercial</div></div>
+            <span style="font-size:1.2rem">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CRYPTO -->
+      <div id="inv-crypto" style="display:none">
+        <div class="hero-card" style="background:var(--g3)">
+          <div class="hero-label">₿ Crypto Portfolio</div>
+          <div class="hero-val" id="crypto-port-val">₹0</div>
+          <div class="hero-sub" id="crypto-port-chg">—</div>
+          <hr class="hero-divider">
+          <button class="btn btn-sm" style="background:rgba(255,255,255,0.22);color:#fff;border:none" onclick="openCryptoExchange()">Open Exchange →</button>
+        </div>
+        <div class="card">
+          <div class="sec-title" style="margin-bottom:0.75rem">My Holdings</div>
+          <div id="my-crypto-list"><div style="text-align:center;color:var(--muted2);padding:1rem 0;font-size:0.82rem">No crypto yet.</div></div>
+        </div>
+        <div class="card">
+          <div class="sec-hdr">
+            <div class="sec-title">Live Prices (INR)</div>
+            <span class="spinner" id="crypto-spin"></span>
+          </div>
+          <div id="crypto-market"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BUSINESS ══ -->
+    <div id="sec-business" class="section">
+      <div class="hero-card" style="background:var(--g4)">
+        <div class="flex flex-b flex-c" style="position:relative">
+          <div>
+            <div class="hero-label">🏢 Total Business Income</div>
+            <div class="hero-val" id="biz-income-ttl">₹0/hr</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:0.62rem;opacity:0.7">Companies</div>
+            <div style="font-family:var(--font-m);font-size:1.5rem;font-weight:700" id="biz-slots">0/10</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-1">
+        <button class="btn btn-g flex-1" onclick="openStartBiz()" style="flex:1">＋ Start Business</button>
+        <button class="btn btn-o" onclick="showNotif('🔜 Mergers coming soon!')">🤝 Mergers</button>
+      </div>
+      <div>
+        <div class="sec-title" style="margin-bottom:0.7rem">My Companies</div>
+        <div id="my-companies"><div style="text-align:center;color:var(--muted2);padding:2rem 0;font-size:0.82rem">No businesses yet. Start one!</div></div>
+      </div>
+    </div>
+
+    <!-- ══ EARNINGS ══ -->
+    <div id="sec-earnings" class="section">
+      <div class="hero-card" style="background:var(--g1);text-align:center">
+        <div class="hero-label" style="text-align:center">💰 Cash Balance</div>
+        <div class="hero-val" style="font-size:2rem;text-align:center" id="earn-balance">₹0</div>
+        <div class="hero-sub" style="text-align:center" id="earn-per-click">₹100 per click</div>
+      </div>
+
+      <div class="clicker-area">
+        <div style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.3rem">Tap to earn instantly</div>
+        <button class="click-btn" id="clicker-btn" onclick="clickEarn(event)">💰</button>
+        <div style="font-size:0.72rem;color:var(--muted)">Click to earn money • Upgrades boost earnings</div>
+        <div style="margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:var(--muted2);margin-bottom:0.35rem">Click Power</div>
+          <div class="progress-wrap"><div class="progress-fill" id="click-progress" style="width:10%"></div></div>
+          <div class="flex flex-b" style="font-size:0.68rem;color:var(--muted2);margin-top:0.3rem">
+            <span id="click-lvl">Level 1</span>
+            <button class="btn btn-sm btn-p" id="upgrade-btn" onclick="upgradeClick()">⬆ Upgrade</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-title" style="margin-bottom:0.7rem">💳 My Cards</div>
+        <div class="scroll-x flex gap-1" style="padding-bottom:0.5rem" id="cards-display"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:0.75rem">📊 Net Worth Breakdown</div>
+        <div id="fortune-breakdown"></div>
+        <canvas id="fortune-donut" width="200" height="200" style="display:block;margin:1rem auto;max-width:180px"></canvas>
+      </div>
+
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:0.75rem">📋 Earnings History</div>
+        <div id="earn-summary"></div>
+      </div>
+    </div>
+
+    <!-- ══ ITEMS ══ -->
+    <div id="sec-items" class="section">
+      <div class="sec-title">🚗 Transport</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.6rem">
+        <div class="item-cat" style="background:linear-gradient(135deg,#1E3A8A18,#1E3A8A33)" onclick="openItemShop('cars')">
+          <div class="item-cat-em">🚗</div>
+          <div class="item-cat-lbl">Garage</div>
+          <div class="item-cat-cnt" id="cnt-cars">0 cars</div>
+        </div>
+        <div class="item-cat" style="background:linear-gradient(135deg,#06522018,#06522033)" onclick="openItemShop('aircraft')">
+          <div class="item-cat-em">✈️</div>
+          <div class="item-cat-lbl">Hangar</div>
+          <div class="item-cat-cnt" id="cnt-aircraft">0 jets</div>
+        </div>
+        <div class="item-cat" style="background:linear-gradient(135deg,#0E4B7C18,#0E4B7C33)" onclick="openItemShop('yachts')">
+          <div class="item-cat-em">🛥️</div>
+          <div class="item-cat-lbl">Harbor</div>
+          <div class="item-cat-cnt" id="cnt-yachts">0 yachts</div>
+        </div>
+      </div>
+
+      <div class="card flex flex-b flex-c" style="cursor:pointer" onclick="openResidence()">
+        <div class="flex flex-c gap-1">
+          <div style="font-size:1.8rem">🏛️</div>
+          <div><div class="sec-title">Residence</div><div style="font-size:0.7rem;color:var(--muted2)">Buy & furnish your mansion</div></div>
+        </div>
+        <span style="color:var(--muted2)">›</span>
+      </div>
+
+      <div class="sec-title">🏆 Collections</div>
+      <div class="grid2">
+        <div class="card card-sm flex flex-c gap-1" style="cursor:pointer" onclick="openCollection('coins')">
+          <span style="font-size:1.6rem">🪙</span>
+          <div><div style="font-weight:700;font-size:0.82rem">Coins</div><div class="item-cat-cnt" id="cnt-coins">0/20</div></div>
+        </div>
+        <div class="card card-sm flex flex-c gap-1" style="cursor:pointer" onclick="openCollection('paintings')">
+          <span style="font-size:1.6rem">🎨</span>
+          <div><div style="font-weight:700;font-size:0.82rem">Paintings</div><div class="item-cat-cnt" id="cnt-paintings">0/20</div></div>
+        </div>
+        <div class="card card-sm flex flex-c gap-1" style="cursor:pointer" onclick="openCollection('jewels')">
+          <span style="font-size:1.6rem">💎</span>
+          <div><div style="font-weight:700;font-size:0.82rem">Jewels</div><div class="item-cat-cnt" id="cnt-jewels">0/20</div></div>
+        </div>
+        <div class="card card-sm flex flex-c gap-1" style="cursor:pointer" onclick="openCollection('nfts')">
+          <span style="font-size:1.6rem">🖼️</span>
+          <div><div style="font-weight:700;font-size:0.82rem">NFTs</div><div class="item-cat-cnt" id="cnt-nfts">0/21</div></div>
+        </div>
+        <div class="card card-sm flex flex-c gap-1" style="cursor:pointer" onclick="openCollection('islands')">
+          <span style="font-size:1.6rem">🏝️</span>
+          <div><div style="font-weight:700;font-size:0.82rem">Islands</div><div class="item-cat-cnt" id="cnt-islands">0/5</div></div>
+        </div>
+        <div class="card card-sm flex flex-c gap-1" style="cursor:pointer" onclick="openCollection('stamps')">
+          <span style="font-size:1.6rem">📮</span>
+          <div><div style="font-weight:700;font-size:0.82rem">Stamps</div><div class="item-cat-cnt" id="cnt-stamps">0/15</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div id="sec-profile" class="section">
+      <div class="hero-card" style="background:var(--g1)">
+        <div class="flex flex-b flex-c" style="position:relative">
+          <div>
+            <div class="hero-label">Net Worth</div>
+            <div class="hero-val" id="profile-fortune">₹0</div>
+          </div>
+          <div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.2);
+            display:flex;align-items:center;justify-content:center;font-size:1.8rem" id="profile-av">👤</div>
+        </div>
+        <hr class="hero-divider">
+        <div style="font-family:var(--font-m);font-size:1.2rem;font-weight:700;position:relative" id="profile-name">Player</div>
+        <div style="font-size:0.7rem;opacity:0.75;position:relative" id="profile-rank-tag">Rank: #—</div>
+      </div>
+
+      <!-- Fortune breakdown items -->
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:0.75rem">💼 Asset Breakdown</div>
+        <div id="profile-breakdown"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:0.75rem">📊 Statistics</div>
+        <div id="profile-stats"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-title" style="margin-bottom:0.75rem">🤑 Lifetime Earned</div>
+        <div id="profile-earned"></div>
+      </div>
+
+      <button class="btn btn-o btn-fw" onclick="openSettings()">⚙️ Settings & Themes</button>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- NAV -->
+  <div class="nav">
+    <div class="nav-item active" id="nav-investing" onclick="switchTab('investing')">
+      <i class="nav-icon">📈</i><span>Investing</span>
+    </div>
+    <div class="nav-item" id="nav-business" onclick="switchTab('business')">
+      <i class="nav-icon">🏢</i><span>Business</span>
+      <span class="nav-badge" id="nav-biz-badge" style="display:none">!</span>
+    </div>
+    <div class="nav-item" id="nav-earnings" onclick="switchTab('earnings')">
+      <i class="nav-icon">💰</i><span>Earnings</span>
+    </div>
+    <div class="nav-item" id="nav-items" onclick="switchTab('items')">
+      <i class="nav-icon">🎁</i><span>Items</span>
+      <span class="nav-badge" id="nav-items-badge" style="display:none">N</span>
+    </div>
+    <div class="nav-item" id="nav-profile" onclick="switchTab('profile')">
+      <i class="nav-icon">👤</i><span>Profile</span>
+    </div>
+  </div>
+</div><!-- /app -->
+
+<!-- ══ MODALS ══ -->
+<!-- Stock Market Modal -->
+<div class="overlay" id="modal-stocks">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0">📈 Stock Market</div>
+      <button class="modal-close" onclick="closeModal('modal-stocks')">✕</button>
+    </div>
+    <div class="chips mt1" id="stock-filter-chips">
+      <div class="chip active" onclick="filterStocks('all',this)">All</div>
+      <div class="chip" onclick="filterStocks('nifty50',this)">Nifty 50</div>
+      <div class="chip" onclick="filterStocks('banking',this)">Banking</div>
+      <div class="chip" onclick="filterStocks('it',this)">IT</div>
+      <div class="chip" onclick="filterStocks('pharma',this)">Pharma</div>
+      <div class="chip" onclick="filterStocks('energy',this)">Energy</div>
+      <div class="chip" onclick="filterStocks('fmcg',this)">FMCG</div>
+      <div class="chip" onclick="filterStocks('auto',this)">Auto</div>
+    </div>
+    <div style="margin-top:0.75rem" id="stock-market-list"></div>
+  </div>
+</div>
+
+<!-- Buy Stock Modal -->
+<div class="overlay" id="modal-buy-stock">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0" id="buy-stock-title">Buy Stock</div>
+      <button class="modal-close" onclick="closeModal('modal-buy-stock')">✕</button>
+    </div>
+    <div id="buy-stock-info" style="margin-bottom:1rem"></div>
+    <div class="input-wrap">
+      <label class="input-lbl">Number of Shares</label>
+      <input class="input-f" type="number" id="buy-qty" min="1" value="1" oninput="updateBuyCost()">
+    </div>
+    <div class="card card-xs flex flex-b flex-c" style="margin-bottom:1rem">
+      <span style="color:var(--muted2);font-size:0.8rem">Total Cost</span>
+      <span style="font-family:var(--font-m);font-weight:700;color:var(--primary)" id="buy-total">₹0</span>
+    </div>
+    <div style="font-size:0.72rem;color:var(--muted2);margin-bottom:0.9rem" id="buy-cash-info"></div>
+    <button class="btn btn-g btn-fw" id="buy-confirm-btn" onclick="confirmBuyStock()">✅ Buy Shares</button>
+    <button class="btn btn-o btn-fw mt1" onclick="closeModal('modal-buy-stock')">Cancel</button>
+  </div>
+</div>
+
+<!-- All Holdings Modal -->
+<div class="overlay" id="modal-holdings">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0">📋 My Holdings</div>
+      <button class="modal-close" onclick="closeModal('modal-holdings')">✕</button>
+    </div>
+    <div id="all-holdings-list"></div>
+  </div>
+</div>
+
+<!-- Holding Detail Modal -->
+<div class="overlay" id="modal-holding-detail">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0" id="holding-detail-title">Stock</div>
+      <button class="modal-close" onclick="closeModal('modal-holding-detail')">✕</button>
+    </div>
+    <div id="holding-detail-body"></div>
+    <div class="grid2 mt2" id="holding-detail-actions"></div>
+  </div>
+</div>
+
+<!-- Real Estate Market Modal -->
+<div class="overlay" id="modal-re-market">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0">🏠 Real Estate Market</div>
+      <button class="modal-close" onclick="closeModal('modal-re-market')">✕</button>
+    </div>
+    <div class="chips" style="margin-bottom:0.8rem" id="re-filter-chips">
+      <div class="chip active" onclick="filterRE('all',this)">All India</div>
+      <div class="chip" onclick="filterRE('mumbai',this)">Mumbai</div>
+      <div class="chip" onclick="filterRE('delhi',this)">Delhi</div>
+      <div class="chip" onclick="filterRE('bangalore',this)">Bengaluru</div>
+      <div class="chip" onclick="filterRE('hyderabad',this)">Hyderabad</div>
+      <div class="chip" onclick="filterRE('pune',this)">Pune</div>
+      <div class="chip" onclick="filterRE('other',this)">Other</div>
+    </div>
+    <div id="re-market-list"></div>
+  </div>
+</div>
+
+<!-- Crypto Exchange Modal -->
+<div class="overlay" id="modal-crypto">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0">₿ Crypto Exchange</div>
+      <button class="modal-close" onclick="closeModal('modal-crypto')">✕</button>
+    </div>
+    <div class="chips" style="margin-bottom:0.8rem">
+      <div class="chip active" onclick="filterCrypto('all',this)">All</div>
+      <div class="chip" onclick="filterCrypto('gainers',this)">Gainers</div>
+      <div class="chip" onclick="filterCrypto('losers',this)">Losers</div>
+    </div>
+    <div id="crypto-exchange-list"></div>
+  </div>
+</div>
+
+<!-- Start Business Modal -->
+<div class="overlay" id="modal-start-biz">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0">🏢 Start a Business</div>
+      <button class="modal-close" onclick="closeModal('modal-start-biz')">✕</button>
+    </div>
+    <div id="biz-categories-list"></div>
+  </div>
+</div>
+
+<!-- Business Detail Modal -->
+<div class="overlay" id="modal-biz-detail">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <button class="modal-close" onclick="closeModal('modal-biz-detail')" style="float:right">✕</button>
+    <div id="biz-detail-body"></div>
+  </div>
+</div>
+
+<!-- Item Shop Modal -->
+<div class="overlay" id="modal-item-shop">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0" id="item-shop-title">Shop</div>
+      <button class="modal-close" onclick="closeModal('modal-item-shop')">✕</button>
+    </div>
+    <div id="item-shop-body"></div>
+  </div>
+</div>
+
+<!-- Rankings Modal -->
+<div class="overlay" id="modal-rankings">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0">🏆 Rankings</div>
+      <button class="modal-close" onclick="closeModal('modal-rankings')">✕</button>
+    </div>
+    <div class="chips" style="margin-bottom:0.85rem">
+      <div class="chip active" onclick="filterRankings('global',this)">🌍 Global</div>
+      <div class="chip" onclick="filterRankings('india',this)">🇮🇳 India</div>
+      <div class="chip" onclick="filterRankings('tech',this)">💻 Tech</div>
+    </div>
+    <div id="rankings-list"></div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="overlay" id="modal-settings">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0">⚙️ Settings</div>
+      <button class="modal-close" onclick="closeModal('modal-settings')">✕</button>
+    </div>
+
+    <div class="card card-sm" style="margin-bottom:0.85rem">
+      <div class="sec-title" style="margin-bottom:0.7rem">Profile</div>
+      <div class="input-wrap">
+        <label class="input-lbl">Your Name</label>
+        <input class="input-f" id="settings-name" type="text" placeholder="Enter your name">
+      </div>
+      <div class="input-wrap">
+        <label class="input-lbl">Avatar</label>
+        <div class="flex gap-1 flex-wrap" id="avatar-picker"></div>
+      </div>
+    </div>
+
+    <div class="card card-sm" style="margin-bottom:0.85rem">
+      <div class="sec-title" style="margin-bottom:0.7rem">🎨 Theme</div>
+      <div class="flex gap-1" id="theme-swatches" style="flex-wrap:wrap"></div>
+      <div style="font-size:0.68rem;color:var(--muted2);margin-top:0.5rem" id="theme-name-display"></div>
+    </div>
+
+    <div class="card card-sm" style="margin-bottom:0.85rem">
+      <div class="sec-title" style="margin-bottom:0.7rem">📱 Real Portfolio Sync</div>
+      <div style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.75rem">Add real stocks you own. Dividends & gains reflect in your game score.</div>
+      <button class="btn btn-g btn-fw" onclick="openAddRealStock()">+ Add Real Holding</button>
+      <div style="margin-top:0.75rem" id="real-holdings-list"></div>
+    </div>
+
+    <button class="btn btn-d btn-fw mt1" onclick="confirmReset()">⚠ Reset Game</button>
+    <div style="text-align:center;color:var(--muted);font-size:0.65rem;margin-top:1rem">DHAN EMPIRE v1.0 • Made in India 🇮🇳</div>
+  </div>
+</div>
+
+<!-- Add Real Stock Modal -->
+<div class="overlay" id="modal-add-real-stock">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="flex flex-b flex-c" style="margin-bottom:0.9rem">
+      <div class="modal-title" style="margin-bottom:0">Add Real Holding</div>
+      <button class="modal-close" onclick="closeModal('modal-add-real-stock')">✕</button>
+    </div>
+    <div style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.9rem">Enter your real stock holdings. Dividends will be credited to your game balance.</div>
+    <div class="input-wrap">
+      <label class="input-lbl">Select Stock</label>
+      <select class="input-f" id="real-stock-select"></select>
+    </div>
+    <div class="input-wrap">
+      <label class="input-lbl">Quantity (real shares you own)</label>
+      <input class="input-f" type="number" id="real-stock-qty" min="1" placeholder="e.g. 100">
+    </div>
+    <div class="input-wrap">
+      <label class="input-lbl">Avg. Buy Price (₹)</label>
+      <input class="input-f" type="number" id="real-stock-price" min="1" placeholder="e.g. 450">
+    </div>
+    <button class="btn btn-g btn-fw" onclick="saveRealStock()">Save Holding</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════
+// DATA MODELS
+// ════════════════════════════════════════════════════
+const NSE_STOCKS = [
+  // symbol, name, sector, color, emoji, divYield%, last known price (approx)
+  {s:"RELIANCE.NS",n:"Reliance Industries",sec:"energy",c:"#1E40AF",em:"🛢️",div:0.35,p:2850},
+  {s:"TCS.NS",n:"Tata Consultancy Services",sec:"it",c:"#065F46",em:"💻",div:1.5,p:3900},
+  {s:"HDFCBANK.NS",n:"HDFC Bank",sec:"banking",c:"#7C2D12",em:"🏦",div:1.1,p:1700},
+  {s:"INFY.NS",n:"Infosys",sec:"it",c:"#1D4ED8",em:"💻",div:2.9,p:1750},
+  {s:"ICICIBANK.NS",n:"ICICI Bank",sec:"banking",c:"#991B1B",em:"🏦",div:0.8,p:1250},
+  {s:"HINDUNILVR.NS",n:"Hindustan Unilever",sec:"fmcg",c:"#1A3A5C",em:"🧴",div:1.6,p:2400},
+  {s:"ITC.NS",n:"ITC Limited",sec:"fmcg",c:"#166534",em:"🌿",div:3.5,p:470},
+  {s:"SBIN.NS",n:"State Bank of India",sec:"banking",c:"#1E3A8A",em:"🏛️",div:1.8,p:820},
+  {s:"BAJFINANCE.NS",n:"Bajaj Finance",sec:"banking",c:"#92400E",em:"💳",div:0.3,p:7200},
+  {s:"MARUTI.NS",n:"Maruti Suzuki",sec:"auto",c:"#1F2937",em:"🚗",div:1.1,p:12000},
+  {s:"WIPRO.NS",n:"Wipro",sec:"it",c:"#374151",em:"💻",div:0.2,p:530},
+  {s:"SUNPHARMA.NS",n:"Sun Pharma",sec:"pharma",c:"#7E22CE",em:"💊",div:0.7,p:1800},
+  {s:"TITAN.NS",n:"Titan Company",sec:"fmcg",c:"#B45309",em:"⌚",div:0.5,p:3700},
+  {s:"LTIM.NS",n:"LTIMindtree",sec:"it",c:"#0F766E",em:"💻",div:1.1,p:5500},
+  {s:"AXISBANK.NS",n:"Axis Bank",sec:"banking",c:"#7C3AED",em:"🏦",div:0.1,p:1100},
+  {s:"NESTLEIND.NS",n:"Nestle India",sec:"fmcg",c:"#DC2626",em:"🍫",div:1.0,p:2350},
+  {s:"POWERGRID.NS",n:"Power Grid Corp",sec:"energy",c:"#0891B2",em:"⚡",div:5.2,p:340},
+  {s:"NTPC.NS",n:"NTPC",sec:"energy",c:"#0369A1",em:"⚡",div:3.1,p:380},
+  {s:"COALINDIA.NS",n:"Coal India",sec:"energy",c:"#374151",em:"⛏️",div:7.5,p:480},
+  {s:"ONGC.NS",n:"ONGC",sec:"energy",c:"#166534",em:"🛢️",div:4.8,p:280},
+  {s:"ADANIENT.NS",n:"Adani Enterprises",sec:"energy",c:"#1E3A8A",em:"🏗️",div:0.05,p:2400},
+  {s:"LT.NS",n:"Larsen & Toubro",sec:"it",c:"#0C4A6E",em:"🏗️",div:0.9,p:3700},
+  {s:"BAJAJFINSV.NS",n:"Bajaj Finserv",sec:"banking",c:"#78350F",em:"💰",div:0.07,p:1800},
+  {s:"TECHM.NS",n:"Tech Mahindra",sec:"it",c:"#0F172A",em:"💻",div:2.5,p:1600},
+  {s:"DRREDDY.NS",n:"Dr. Reddy's Labs",sec:"pharma",c:"#6D28D9",em:"💊",div:0.4,p:6500},
+  {s:"CIPLA.NS",n:"Cipla",sec:"pharma",c:"#0369A1",em:"💊",div:0.4,p:1550},
+  {s:"DIVISLAB.NS",n:"Divi's Laboratories",sec:"pharma",c:"#065F46",em:"🧬",div:0.6,p:5600},
+  {s:"HEROMOTOCO.NS",n:"Hero MotoCorp",sec:"auto",c:"#DC2626",em:"🏍️",div:3.8,p:4900},
+  {s:"BAJAJ-AUTO.NS",n:"Bajaj Auto",sec:"auto",c:"#B45309",em:"🛵",div:1.5,p:9200},
+  {s:"TATAMOTORS.NS",n:"Tata Motors",sec:"auto",c:"#1E3A8A",em:"🚙",div:0.2,p:1000},
+  {s:"EICHERMOT.NS",n:"Eicher Motors",sec:"auto",c:"#92400E",em:"🏍️",div:1.0,p:4800},
+  {s:"ASIANPAINT.NS",n:"Asian Paints",sec:"fmcg",c:"#B45309",em:"🎨",div:1.3,p:2700},
+  {s:"DABUR.NS",n:"Dabur India",sec:"fmcg",c:"#166534",em:"🌿",div:0.9,p:540},
+  {s:"BRITANNIA.NS",n:"Britannia Industries",sec:"fmcg",c:"#DC2626",em:"🍪",div:1.3,p:5200},
+  {s:"BPCL.NS",n:"BPCL",sec:"energy",c:"#1E40AF",em:"⛽",div:5.1,p:320},
+  {s:"GRASIM.NS",n:"Grasim Industries",sec:"it",c:"#0F766E",em:"🏭",div:0.5,p:2700},
+  {s:"INDUSINDBK.NS",n:"IndusInd Bank",sec:"banking",c:"#7C2D12",em:"🏦",div:1.3,p:1000},
+  {s:"SHREECEM.NS",n:"Shree Cement",sec:"it",c:"#374151",em:"🏗️",div:0.3,p:27000},
+  {s:"ULTRACEMCO.NS",n:"UltraTech Cement",sec:"it",c:"#1E3A8A",em:"🏗️",div:0.3,p:12000},
+  {s:"JSWSTEEL.NS",n:"JSW Steel",sec:"it",c:"#991B1B",em:"⚙️",div:0.6,p:960},
+  {s:"TATASTEEL.NS",n:"Tata Steel",sec:"it",c:"#1F2937",em:"⚙️",div:1.5,p:155},
+  {s:"HCLTECH.NS",n:"HCL Technologies",sec:"it",c:"#065F46",em:"💻",div:3.5,p:1700},
+  {s:"APOLLOHOSP.NS",n:"Apollo Hospitals",sec:"pharma",c:"#7E22CE",em:"🏥",div:0.4,p:7200},
+  {s:"BHARTIARTL.NS",n:"Bharti Airtel",sec:"it",c:"#991B1B",em:"📡",div:0.5,p:1700},
+  {s:"TATACONSUM.NS",n:"Tata Consumer",sec:"fmcg",c:"#1E3A8A",em:"🍵",div:0.9,p:1150},
+  {s:"M&M.NS",n:"Mahindra & Mahindra",sec:"auto",c:"#166534",em:"🚙",div:0.8,p:2900},
+  {s:"HINDALCO.NS",n:"Hindalco",sec:"it",c:"#92400E",em:"⚙️",div:1.0,p:700},
+  {s:"SBILIFE.NS",n:"SBI Life Insurance",sec:"banking",c:"#0369A1",em:"🛡️",div:0.4,p:1700},
+  {s:"HDFCLIFE.NS",n:"HDFC Life Insurance",sec:"banking",c:"#7C2D12",em:"🛡️",div:0.4,p:720},
+  {s:"KOTAKBANK.NS",n:"Kotak Mahindra Bank",sec:"banking",c:"#DC2626",em:"🏦",div:0.1,p:1850},
+];
+
+const CRYPTO_LIST = [
+  {id:"bitcoin",n:"Bitcoin",s:"BTC",c:"#F97316",em:"₿",p:3500000},
+  {id:"ethereum",n:"Ethereum",s:"ETH",c:"#818CF8",em:"Ξ",p:265000},
+  {id:"solana",n:"Solana",s:"SOL",c:"#9945FF",em:"◎",p:18000},
+  {id:"cardano",n:"Cardano",s:"ADA",c:"#0369A1",em:"₳",p:42},
+  {id:"ripple",n:"XRP",s:"XRP",c:"#1E40AF",em:"✕",p:55},
+  {id:"polkadot",n:"Polkadot",s:"DOT",c:"#E8467C",em:"●",p:750},
+  {id:"dogecoin",n:"Dogecoin",s:"DOGE",c:"#CA8A04",em:"Ð",p:15},
+  {id:"avalanche-2",n:"Avalanche",s:"AVAX",c:"#DC2626",em:"▲",p:3500},
+  {id:"litecoin",n:"Litecoin",s:"LTC",c:"#6B7280",em:"Ł",p:8800},
+  {id:"chainlink",n:"Chainlink",s:"LINK",c:"#2563EB",em:"⬡",p:1500},
+  {id:"matic-network",n:"Polygon",s:"MATIC",c:"#8B5CF6",em:"♦",p:90},
+  {id:"tron",n:"TRON",s:"TRX",c:"#DC2626",em:"T",p:18},
+];
+
+const RE_PROPERTIES = [
+  {id:"p1",city:"Mumbai",loc:"Bandra West",type:"3BHK Apartment",price:25000000,rent:120000,img:"🏙️",tag:"mumbai"},
+  {id:"p2",city:"Mumbai",loc:"Worli Sea Face",type:"4BHK Sea View",price:85000000,rent:380000,img:"🌊",tag:"mumbai"},
+  {id:"p3",city:"Mumbai",loc:"Powai",type:"2BHK Apartment",price:12500000,rent:55000,img:"🏢",tag:"mumbai"},
+  {id:"p4",city:"Delhi",loc:"South Extension",type:"5BHK Villa",price:45000000,rent:180000,img:"🏛️",tag:"delhi"},
+  {id:"p5",city:"Delhi",loc:"Dwarka",type:"3BHK Flat",price:8500000,rent:38000,img:"🏢",tag:"delhi"},
+  {id:"p6",city:"Delhi",loc:"Connaught Place",type:"Commercial Space",price:120000000,rent:650000,img:"🏬",tag:"delhi"},
+  {id:"p7",city:"Bengaluru",loc:"Koramangala",type:"3BHK Apartment",price:9500000,rent:45000,img:"🌿",tag:"bangalore"},
+  {id:"p8",city:"Bengaluru",loc:"Whitefield",type:"4BHK Villa",price:18000000,rent:85000,img:"🏡",tag:"bangalore"},
+  {id:"p9",city:"Hyderabad",loc:"Gachibowli",type:"3BHK Apartment",price:7500000,rent:35000,img:"🏢",tag:"hyderabad"},
+  {id:"p10",city:"Hyderabad",loc:"Jubilee Hills",type:"5BHK Villa",price:35000000,rent:160000,img:"🏰",tag:"hyderabad"},
+  {id:"p11",city:"Pune",loc:"Koregaon Park",type:"3BHK Flat",price:8000000,rent:38000,img:"🌳",tag:"pune"},
+  {id:"p12",city:"Pune",loc:"Hinjawadi",type:"2BHK Flat",price:5500000,rent:25000,img:"🏗️",tag:"pune"},
+  {id:"p13",city:"Chennai",loc:"Adyar",type:"3BHK Apartment",price:9000000,rent:42000,img:"🌴",tag:"other"},
+  {id:"p14",city:"Kolkata",loc:"Park Street",type:"Commercial Office",price:18000000,rent:95000,img:"🏢",tag:"other"},
+  {id:"p15",city:"Goa",loc:"Calangute Beach",type:"Beach Villa",price:22000000,rent:180000,img:"🏖️",tag:"other"},
+  {id:"p16",city:"Jaipur",loc:"C-Scheme",type:"3BHK Apartment",price:6500000,rent:30000,img:"🏯",tag:"other"},
+];
+
+const BIZ_CATEGORIES = [
+  {cat:"shop",em:"🛒",label:"Shop",desc:"Retail store",priceBase:500000,incomeBase:25000,color:"#16A34A"},
+  {cat:"taxi",em:"🚕",label:"Taxi Company",desc:"Urban transport",priceBase:1000000,incomeBase:55000,color:"#CA8A04"},
+  {cat:"shipping",em:"🚚",label:"Shipping Co.",desc:"Logistics & delivery",priceBase:2000000,incomeBase:130000,color:"#EA580C"},
+  {cat:"factory",em:"🏭",label:"Factory",desc:"Manufacturing unit",priceBase:2500000,incomeBase:190000,color:"#0284C7"},
+  {cat:"construction",em:"🏗️",label:"Construction",desc:"Real estate dev",priceBase:3500000,incomeBase:280000,color:"#7C3AED"},
+  {cat:"cardealer",em:"🚘",label:"Car Dealership",desc:"Vehicle sales",priceBase:4000000,incomeBase:350000,color:"#DC2626"},
+  {cat:"it",em:"💻",label:"IT Company",desc:"Software services",priceBase:5000000,incomeBase:500000,color:"#0F766E"},
+  {cat:"hotel",em:"🏨",label:"Hotel",desc:"Hospitality",priceBase:8000000,incomeBase:850000,color:"#B45309"},
+  {cat:"oilgas",em:"🛢️",label:"Oil & Gas",desc:"Energy sector",priceBase:15000000,incomeBase:2000000,color:"#1E40AF"},
+  {cat:"pharma",em:"💊",label:"Pharma",desc:"Medical products",priceBase:12000000,incomeBase:1600000,color:"#7E22CE"},
+  {cat:"telecom",em:"📡",label:"Telecom",desc:"ISP & mobile",priceBase:20000000,incomeBase:3000000,color:"#0369A1"},
+  {cat:"bank",em:"🏦",label:"Bank",desc:"Financial services",priceBase:50000000,incomeBase:9000000,color:"#991B1B"},
+];
+
+const TRANSPORT_ITEMS = {
+  cars:[
+    {id:"c1",n:"Maruti Swift",em:"🚗",price:750000,income:1500},
+    {id:"c2",n:"Honda City",em:"🚗",price:1500000,income:3000},
+    {id:"c3",n:"BMW 3 Series",em:"🚗",price:5000000,income:10000},
+    {id:"c4",n:"Mercedes E-Class",em:"🚗",price:8500000,income:18000},
+    {id:"c5",n:"Lamborghini Huracán",em:"🏎️",price:35000000,income:75000},
+    {id:"c6",n:"Ferrari 488",em:"🏎️",price:42000000,income:95000},
+    {id:"c7",n:"Rolls-Royce Ghost",em:"🏎️",price:75000000,income:175000},
+    {id:"c8",n:"Bugatti Chiron",em:"🏎️",price:250000000,income:600000},
+  ],
+  aircraft:[
+    {id:"a1",n:"Cessna 172",em:"✈️",price:5000000,income:20000},
+    {id:"a2",n:"Bombardier CRJ200",em:"✈️",price:50000000,income:250000},
+    {id:"a3",n:"Gulfstream G550",em:"✈️",price:350000000,income:1800000},
+    {id:"a4",n:"Boeing 737 BBJ",em:"✈️",price:800000000,income:4500000},
+  ],
+  yachts:[
+    {id:"y1",n:"Sailboat 30ft",em:"⛵",price:3000000,income:12000},
+    {id:"y2",n:"Motor Yacht 50ft",em:"🛥️",price:15000000,income:65000},
+    {id:"y3",n:"Superyacht 100ft",em:"🛥️",price:80000000,income:400000},
+    {id:"y4",n:"Mega Yacht 200ft",em:"🛳️",price:350000000,income:2000000},
+  ]
+};
+
+const COLLECTIONS = {
+  coins:[
+    {id:"co1",n:"1 Rupee 1907",rare:"legendary",price:50000,em:"🪙"},
+    {id:"co2",n:"Anna Series 1945",rare:"epic",price:25000,em:"🪙"},
+    {id:"co3",n:"Decimal Proof 1964",rare:"rare",price:15000,em:"🪙"},
+    {id:"co4",n:"Republic India 1950",rare:"legendary",price:120000,em:"🪙"},
+    {id:"co5",n:"Silver Rupee 1862",rare:"epic",price:40000,em:"🪙"},
+  ],
+  paintings:[
+    {id:"pa1",n:"Ravi Varma Original",rare:"legendary",price:5000000,em:"🎨"},
+    {id:"pa2",n:"MF Husain Canvas",rare:"epic",price:1200000,em:"🎨"},
+    {id:"pa3",n:"SH Raza Abstract",rare:"rare",price:350000,em:"🎨"},
+    {id:"pa4",n:"Amrita Sher-Gil",rare:"legendary",price:8000000,em:"🎨"},
+  ],
+  jewels:[
+    {id:"j1",n:"Kashmir Sapphire",rare:"legendary",price:2500000,em:"💎"},
+    {id:"j2",n:"Golconda Diamond",rare:"legendary",price:15000000,em:"💎"},
+    {id:"j3",n:"Emerald Necklace",rare:"epic",price:850000,em:"💍"},
+    {id:"j4",n:"Ruby Pendant",rare:"rare",price:320000,em:"💎"},
+  ],
+  nfts:[
+    {id:"n1",n:"CryptoPunk #404",rare:"legendary",price:12000000,em:"🖼️"},
+    {id:"n2",n:"Bored Ape #2801",rare:"epic",price:4500000,em:"🖼️"},
+    {id:"n3",n:"Indian Digital Art",rare:"rare",price:250000,em:"🖼️"},
+    {id:"n4",n:"Pixel India #1",rare:"rare",price:180000,em:"🖼️"},
+  ],
+  islands:[
+    {id:"i1",n:"Andaman Beach",rare:"epic",price:50000000,em:"🏝️"},
+    {id:"i2",n:"Lakshadweep Atoll",rare:"legendary",price:200000000,em:"🏝️"},
+  ],
+  stamps:[
+    {id:"st1",n:"First Indian Stamp 1852",rare:"legendary",price:500000,em:"📮"},
+    {id:"st2",n:"Gandhi Series 1948",rare:"epic",price:150000,em:"📮"},
+    {id:"st3",n:"Republic Day 1950",rare:"rare",price:50000,em:"📮"},
+  ]
+};
+
+const GLOBAL_RICH = [
+  {name:"Elon Musk",type:"Technology & Automotive",worth:"₹2,04,00,00,00,00,000",av:"EM"},
+  {name:"Jeff Bezos",type:"E-Commerce",worth:"₹1,68,00,00,00,00,000",av:"JB"},
+  {name:"Bernard Arnault",type:"Luxury & Fashion",worth:"₹1,60,00,00,00,00,000",av:"BA"},
+  {name:"Mark Zuckerberg",type:"Social Media",worth:"₹1,52,00,00,00,00,000",av:"MZ"},
+  {name:"Bill Gates",type:"Technology & Philanthropy",worth:"₹1,08,00,00,00,00,000",av:"BG"},
+  {name:"Larry Ellison",type:"Technology",worth:"₹1,00,00,00,00,00,000",av:"LE"},
+  {name:"Warren Buffett",type:"Investments",worth:"₹88,00,00,00,00,000",av:"WB"},
+  {name:"Larry Page",type:"Technology",worth:"₹84,00,00,00,00,000",av:"LP"},
+  {name:"Sergey Brin",type:"Technology",worth:"₹80,00,00,00,00,000",av:"SB"},
+  {name:"Steve Ballmer",type:"Technology",worth:"₹76,00,00,00,00,000",av:"SB"},
+];
+const INDIA_RICH = [
+  {name:"Mukesh Ambani",type:"Energy & Retail",worth:"₹8,40,00,00,00,000",av:"MA"},
+  {name:"Gautam Adani",type:"Infrastructure",worth:"₹6,80,00,00,00,000",av:"GA"},
+  {name:"Shiv Nadar",type:"Technology",worth:"₹2,64,00,00,00,000",av:"SN"},
+  {name:"Cyrus Poonawalla",type:"Pharma",worth:"₹2,24,00,00,00,000",av:"CP"},
+  {name:"Savitri Jindal",type:"Steel & Mining",worth:"₹1,92,00,00,00,000",av:"SJ"},
+  {name:"Kumar Birla",type:"Conglomerate",worth:"₹1,76,00,00,00,000",av:"KB"},
+  {name:"Dilip Shanghvi",type:"Pharmaceuticals",worth:"₹1,52,00,00,00,000",av:"DS"},
+  {name:"Uday Kotak",type:"Banking",worth:"₹1,36,00,00,00,000",av:"UK"},
+  {name:"HCL Roshni Nadar",type:"Technology",worth:"₹1,20,00,00,00,000",av:"RN"},
+  {name:"Hinduja Brothers",type:"Industry",worth:"₹1,04,00,00,00,000",av:"HB"},
+];
+
+// ════════════════════════════════════════════════════
+// GAME STATE
+// ════════════════════════════════════════════════════
+let G = {
+  cash: 10000000,        // ₹1 crore starting cash
+  clickPower: 100,
+  clickLevel: 1,
+  clickXP: 0,
+  name: "Player",
+  avatar: "👑",
+  theme: "default",
+  holdings: {},          // {symbol: {qty, avgPrice}}
+  realHoldings: {},      // real portfolio sync
+  businesses: [],        // [{cat, name, level, income, employees}]
+  properties: {},        // {id: true}
+  cryptoHoldings: {},    // {id: {qty, avgPrice}}
+  transport: {cars:[],aircraft:[],yachts:[]},
+  collections: {coins:[],paintings:[],jewels:[],nfts:[],islands:[],stamps:[]},
+  residence: null,
+  earned: {clicker:0,business:0,rent:0,dividends:0,trading:0,crypto:0},
+  lastSave: Date.now(),
+  totalClicks: 0,
+};
+let stockPrices = {};    // {symbol: {price, change, changeP}}
+let cryptoPrices = {};   // {id: {price, change24h}}
+let gameInterval = null;
+let priceInterval = null;
+let currentStockFilter = "all";
+let currentREFilter = "all";
+let currentCryptoFilter = "all";
+let currentRankingsFilter = "global";
+let pendingBuyStock = null;
+let pendingBuyCrypto = null;
+let pendingBuyRE = null;
+let currentItemShop = null;
+
+// ════════════════════════════════════════════════════
+// SAVE / LOAD
+// ════════════════════════════════════════════════════
+function saveGame() {
+  try { localStorage.setItem("dhan_empire_v1", JSON.stringify(G)); } catch(e){}
+}
+function loadGame() {
+  try {
+    const d = localStorage.getItem("dhan_empire_v1");
+    if (d) { G = {...G, ...JSON.parse(d)}; }
+  } catch(e){}
+}
+
+// ════════════════════════════════════════════════════
+// SPLASH + INIT
+// ════════════════════════════════════════════════════
+const splashMsgs = [
+  "Loading NSE stock data…",
+  "Connecting to CoinGecko…",
+  "Building your empire…",
+  "Calibrating markets…",
+  "Preparing analytics…",
+  "Welcome to Dhan Empire!",
+];
+async function initApp() {
+  loadGame();
+  applyTheme(G.theme);
+  const bar = document.getElementById("sp-bar");
+  const status = document.getElementById("sp-status");
+  for (let i = 0; i < splashMsgs.length; i++) {
+    status.textContent = splashMsgs[i];
+    bar.style.width = ((i+1)/splashMsgs.length*100) + "%";
+    await sleep(350);
+  }
+  // Init stock prices from defaults
+  NSE_STOCKS.forEach(st => { stockPrices[st.s] = {price:st.p, change:0, changeP:0}; });
+  CRYPTO_LIST.forEach(c => { cryptoPrices[c.id] = {price:c.p, change24h:0}; });
+  fetchStockPrices();
+  fetchCryptoPrices();
+  document.getElementById("splash").style.opacity = "0";
+  setTimeout(()=>{
+    document.getElementById("splash").style.display = "none";
+    document.getElementById("app").style.display = "flex";
+    startGameLoop();
+    renderAll();
+    priceInterval = setInterval(()=>{
+      fetchStockPrices();
+      fetchCryptoPrices();
+    }, 60000);
+  }, 500);
+}
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ════════════════════════════════════════════════════
+// API FETCHING
+// ════════════════════════════════════════════════════
+async function fetchStockPrices() {
+  const symbols = NSE_STOCKS.map(s=>s.s).join(",");
+  try {
+    const proxy = "https://api.allorigins.win/raw?url=";
+    const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbols)}&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent&lang=en-IN&region=IN`;
+    const res = await fetch(proxy + encodeURIComponent(url), {signal: AbortSignal.timeout(8000)});
+    const data = await res.json();
+    if (data?.quoteResponse?.result) {
+      data.quoteResponse.result.forEach(q => {
+        if (q.regularMarketPrice) {
+          stockPrices[q.symbol] = {
+            price: q.regularMarketPrice,
+            change: q.regularMarketChange || 0,
+            changeP: q.regularMarketChangePercent || 0
+          };
+        }
+      });
+    }
+    renderStockPreviews();
+    renderHoldingsPreview();
+    renderStockMarketList();
+    updatePortfolioValue();
+    updateMarketTime();
+  } catch(e) {
+    simulateStockMovement();
+    renderStockPreviews();
+    renderHoldingsPreview();
+    updatePortfolioValue();
+  }
+}
+
+async function fetchCryptoPrices() {
+  const ids = CRYPTO_LIST.map(c=>c.id).join(",");
+  try {
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=inr&include_24hr_change=true`;
+    const res = await fetch(url, {signal: AbortSignal.timeout(8000)});
+    const data = await res.json();
+    CRYPTO_LIST.forEach(c => {
+      if (data[c.id]?.inr) {
+        cryptoPrices[c.id] = {
+          price: data[c.id].inr,
+          change24h: data[c.id].inr_24h_change || 0
+        };
+      }
+    });
+    document.getElementById("crypto-spin").style.display = "none";
+    renderCryptoMarket();
+    updateCryptoPortfolio();
+  } catch(e) {
+    document.getElementById("crypto-spin").style.display = "none";
+    simulateCryptoMovement();
+    renderCryptoMarket();
+    updateCryptoPortfolio();
+  }
+}
+
+function simulateStockMovement() {
+  NSE_STOCKS.forEach(st => {
+    const p = stockPrices[st.s] || {price:st.p, change:0, changeP:0};
+    const chg = (Math.random()-0.48) * p.price * 0.015;
+    const newP = Math.max(p.price + chg, p.price * 0.9);
+    stockPrices[st.s] = {price:newP, change:chg, changeP:(chg/p.price*100)};
+  });
+}
+function simulateCryptoMovement() {
+  CRYPTO_LIST.forEach(c => {
+    const p = cryptoPrices[c.id] || {price:c.p, change24h:0};
+    const chg = (Math.random()-0.47) * p.price * 0.03;
+    const newP = Math.max(p.price + chg, p.price * 0.85);
+    cryptoPrices[c.id] = {price:newP, change24h:(chg/p.price*100)};
+  });
+}
+function updateMarketTime() {
+  const t = new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});
+  const el = document.getElementById("mkt-time");
+  if(el) el.textContent = t;
+}
+
+// ════════════════════════════════════════════════════
+// GAME LOOP
+// ════════════════════════════════════════════════════
+function startGameLoop() {
+  if (gameInterval) clearInterval(gameInterval);
+  gameInterval = setInterval(gameTick, 1000);
+}
+function gameTick() {
+  let incomePerSec = 0;
+  // Business income
+  G.businesses.forEach(b => { incomePerSec += b.income / 3600; });
+  // Property rental (monthly → per second)
+  Object.keys(G.properties).forEach(pid => {
+    const prop = RE_PROPERTIES.find(p=>p.id===pid);
+    if(prop) incomePerSec += prop.rent / (30*24*3600);
+  });
+  // Transport income
+  [...G.transport.cars,...G.transport.aircraft,...G.transport.yachts].forEach(itemId => {
+    ["cars","aircraft","yachts"].forEach(cat => {
+      const item = TRANSPORT_ITEMS[cat].find(i=>i.id===itemId);
+      if(item) incomePerSec += item.income / 3600;
+    });
+  });
+  if (incomePerSec > 0) {
+    G.cash += incomePerSec;
+    G.earned.business += incomePerSec;
+  }
+  // Dividend income (quarterly → per second, every game tick)
+  if (Math.random() < 0.001) applyDividends();
+  G.lastSave = Date.now();
+  if (Math.random() < 0.02) saveGame();
+  updateHeader();
+}
+
+function applyDividends() {
+  Object.entries(G.holdings).forEach(([sym, h]) => {
+    const stock = NSE_STOCKS.find(s=>s.s===sym);
+    if (!stock || !h.qty) return;
+    const price = stockPrices[sym]?.price || stock.p;
+    const annualDiv = price * h.qty * (stock.div/100);
+    const quarterlyDiv = annualDiv / 4;
+    if (quarterlyDiv > 0) {
+      G.cash += quarterlyDiv;
+      G.earned.dividends += quarterlyDiv;
+      showNotif(`💰 Dividend: +${fmtINR(quarterlyDiv)} from ${stock.n}`);
+    }
+  });
+}
+
+// Real portfolio dividends (reflected in game)
+function applyRealDividends() {
+  Object.entries(G.realHoldings).forEach(([sym, h]) => {
+    const stock = NSE_STOCKS.find(s=>s.s===sym);
+    if (!stock || !h.qty) return;
+    const price = stockPrices[sym]?.price || stock.p;
+    const annualDiv = price * h.qty * (stock.div/100);
+    const quarterlyDiv = annualDiv / 4;
+    if (quarterlyDiv > 0) {
+      G.cash += quarterlyDiv;
+      G.earned.dividends += quarterlyDiv;
+      showNotif(`📈 Real Portfolio Dividend: +${fmtINR(quarterlyDiv)} from ${stock.n}`);
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════
+// FORMAT HELPERS
+// ════════════════════════════════════════════════════
+function fmtINR(n) {
+  if (n === undefined || n === null) return "₹0";
+  const abs = Math.abs(n);
+  const sign = n < 0 ? "-" : "";
+  if (abs >= 1e12) return sign + "₹" + (abs/1e12).toFixed(2) + "L Cr";
+  if (abs >= 1e9)  return sign + "₹" + (abs/1e9).toFixed(2)  + " Arab";
+  if (abs >= 1e7)  return sign + "₹" + (abs/1e7).toFixed(2)  + " Cr";
+  if (abs >= 1e5)  return sign + "₹" + (abs/1e5).toFixed(2)  + " L";
+  if (abs >= 1e3)  return sign + "₹" + (abs/1e3).toFixed(1)  + "K";
+  return sign + "₹" + abs.toFixed(0);
+}
+function fmtFull(n) {
+  return "₹" + Math.round(n).toLocaleString("en-IN");
+}
+function fmtChg(v) {
+  const s = v >= 0 ? "+" : "";
+  return `${s}${v.toFixed(2)}%`;
+}
+function getTotalFortune() {
+  let f = G.cash;
+  // Stocks
+  Object.entries(G.holdings).forEach(([sym,h]) => {
+    f += (stockPrices[sym]?.price || NSE_STOCKS.find(s=>s.s===sym)?.p || 0) * h.qty;
+  });
+  // Real estate
+  Object.keys(G.properties).forEach(pid => {
+    const p = RE_PROPERTIES.find(p=>p.id===pid);
+    if(p) f += p.price;
+  });
+  // Crypto
+  Object.entries(G.cryptoHoldings).forEach(([id,h]) => {
+    f += (cryptoPrices[id]?.price || 0) * h.qty;
+  });
+  // Businesses
+  G.businesses.forEach(b => { f += b.invested || 0; });
+  // Transport
+  [...G.transport.cars,...G.transport.aircraft,...G.transport.yachts].forEach(itemId => {
+    ["cars","aircraft","yachts"].forEach(cat => {
+      const item = TRANSPORT_ITEMS[cat].find(i=>i.id===itemId);
+      if(item) f += item.price * 0.7;
+    });
+  });
+  // Collections
+  Object.values(G.collections).flat().forEach(cid => {
+    for (const cat of Object.values(COLLECTIONS)) {
+      const item = cat.find(i=>i.id===cid);
+      if(item) f += item.price;
+    }
+  });
+  return f;
+}
+function getIncomePerHour() {
+  let inc = 0;
+  G.businesses.forEach(b => inc += b.income);
+  Object.keys(G.properties).forEach(pid => {
+    const p = RE_PROPERTIES.find(pr=>pr.id===pid);
+    if(p) inc += p.rent / 30 * 24;
+  });
+  [...G.transport.cars,...G.transport.aircraft,...G.transport.yachts].forEach(itemId => {
+    ["cars","aircraft","yachts"].forEach(cat => {
+      const item = TRANSPORT_ITEMS[cat].find(i=>i.id===itemId);
+      if(item) inc += item.income;
+    });
+  });
+  return inc;
+}
+
+// ════════════════════════════════════════════════════
+// RENDER ALL
+// ════════════════════════════════════════════════════
+function renderAll() {
+  updateHeader();
+  renderHoldingsPreview();
+  renderStockPreviews();
+  renderDivPreview();
+  renderGrowthPreview();
+  renderMyProperties();
+  renderREPortfolio();
+  renderMyCryptoList();
+  renderCryptoMarket();
+  updateCryptoPortfolio();
+  renderBusinesses();
+  renderEarnings();
+  renderCards();
+  renderItems();
+  renderProfile();
+  renderSettings();
+}
+
+function updateHeader() {
+  const fortune = getTotalFortune();
+  const iph = getIncomePerHour();
+  document.getElementById("hdr-fortune").textContent = fmtINR(fortune);
+  document.getElementById("hdr-cash").textContent = fmtINR(G.cash);
+  document.getElementById("hdr-income").textContent = "+" + fmtINR(iph) + "/hr";
+}
+
+function updatePortfolioValue() {
+  let val = 0, cost = 0;
+  Object.entries(G.holdings).forEach(([sym,h]) => {
+    const price = stockPrices[sym]?.price || 0;
+    val += price * h.qty;
+    cost += h.avgPrice * h.qty;
+  });
+  document.getElementById("stock-port-val").textContent = fmtFull(val);
+  const chg = val - cost;
+  const chgP = cost > 0 ? (chg/cost*100) : 0;
+  const el = document.getElementById("stock-port-chg");
+  el.textContent = chg >= 0 ? `▲ +${fmtINR(chg)} (${chgP.toFixed(2)}%)` : `▼ ${fmtINR(chg)} (${chgP.toFixed(2)}%)`;
+  el.style.color = chg >= 0 ? "rgba(255,255,255,0.9)" : "#FFCCCC";
+  // Dividend
+  let annualDiv = 0;
+  Object.entries(G.holdings).forEach(([sym,h]) => {
+    const stock = NSE_STOCKS.find(s=>s.s===sym);
+    if(stock) annualDiv += (stockPrices[sym]?.price||stock.p) * h.qty * (stock.div/100);
+  });
+  document.getElementById("stock-div").textContent = fmtINR(annualDiv) + "/yr";
+}
+
+function updateCryptoPortfolio() {
+  let val = 0, cost = 0;
+  Object.entries(G.cryptoHoldings).forEach(([id,h]) => {
+    val += (cryptoPrices[id]?.price||0) * h.qty;
+    cost += h.avgPrice * h.qty;
+  });
+  document.getElementById("crypto-port-val").textContent = fmtFull(val);
+  const chg = val - cost;
+  const chgP = cost > 0 ? chg/cost*100 : 0;
+  const el = document.getElementById("crypto-port-chg");
+  el.textContent = cost > 0 ? (chg>=0 ? `▲ +${fmtINR(chg)} (${chgP.toFixed(2)}%)` : `▼ ${fmtINR(chg)} (${chgP.toFixed(2)}%)`) : "Buy crypto to start";
+}
+
+// ════════════════════════════════════════════════════
+// STOCKS RENDERING
+// ════════════════════════════════════════════════════
+function stockRow(st, showBuy=false) {
+  const price = stockPrices[st.s]?.price || st.p;
+  const chg = stockPrices[st.s]?.changeP || 0;
+  const held = G.holdings[st.s];
+  return `<div class="srow" onclick="openBuyStock('${st.s}')">
+    <div class="srow-icon" style="background:${st.c}22;color:${st.c}">${st.em}</div>
+    <div class="srow-info">
+      <div class="srow-name">${st.n}</div>
+      <div class="srow-sub">${st.s.replace(".NS","")} • NSE${held?` • ${held.qty} shares`:""}</div>
+    </div>
+    <div class="srow-right">
+      <div class="srow-price">${fmtFull(price)}</div>
+      <div class="srow-chg ${chg>=0?"pos":"neg"}">${fmtChg(chg)}</div>
+    </div>
+  </div>`;
+}
+
+function renderStockPreviews() {
+  renderDivPreview();
+  renderGrowthPreview();
+}
+
+function renderDivPreview() {
+  const top = [...NSE_STOCKS].sort((a,b)=>b.div-a.div).slice(0,4);
+  document.getElementById("div-preview").innerHTML = top.map(st => {
+    const price = stockPrices[st.s]?.price || st.p;
+    const chg = stockPrices[st.s]?.changeP || 0;
+    return `<div class="srow" onclick="openBuyStock('${st.s}')">
+      <div class="srow-icon" style="background:${st.c}22;color:${st.c}">${st.em}</div>
+      <div class="srow-info">
+        <div class="srow-name">${st.n}</div>
+        <div class="srow-sub">${st.s.replace(".NS","")} • NSE</div>
+      </div>
+      <div class="srow-right">
+        <div class="srow-price">${fmtFull(price)}</div>
+        <div style="display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap">
+          <span class="badge badge-gold">${st.div}% div</span>
+          <span class="badge ${chg>=0?"badge-up":"badge-down"}">${fmtChg(chg)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderGrowthPreview() {
+  const stocks = [...NSE_STOCKS].sort((a,b) => {
+    const ca = stockPrices[a.s]?.changeP || 0;
+    const cb = stockPrices[b.s]?.changeP || 0;
+    return cb - ca;
+  }).slice(0,4);
+  document.getElementById("growth-preview").innerHTML = stocks.map(st => {
+    const price = stockPrices[st.s]?.price || st.p;
+    const chg = stockPrices[st.s]?.changeP || 0;
+    return `<div class="srow" onclick="openBuyStock('${st.s}')">
+      <div class="srow-icon" style="background:${st.c}22;color:${st.c}">${st.em}</div>
+      <div class="srow-info"><div class="srow-name">${st.n}</div><div class="srow-sub">${st.s.replace(".NS","")}</div></div>
+      <div class="srow-right">
+        <div class="srow-price">${fmtFull(price)}</div>
+        <div class="srow-chg ${chg>=0?"pos":"neg"} ">${fmtChg(chg)}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderHoldingsPreview() {
+  const keys = Object.keys(G.holdings);
+  if (!keys.length) {
+    document.getElementById("holdings-preview").innerHTML = `<div style="text-align:center;color:var(--muted2);padding:1.5rem 0;font-size:0.82rem">No stocks yet. Buy from the market →</div>`;
+    return;
+  }
+  document.getElementById("holdings-preview").innerHTML = keys.slice(0,4).map(sym => {
+    const h = G.holdings[sym];
+    const st = NSE_STOCKS.find(s=>s.s===sym);
+    if(!st) return "";
+    const price = stockPrices[sym]?.price || st.p;
+    const val = price * h.qty;
+    const pnl = (price - h.avgPrice) * h.qty;
+    const pnlP = h.avgPrice > 0 ? (price-h.avgPrice)/h.avgPrice*100 : 0;
+    return `<div class="srow" onclick="openHoldingDetail('${sym}')">
+      <div class="srow-icon" style="background:${st.c}22;color:${st.c}">${st.em}</div>
+      <div class="srow-info">
+        <div class="srow-name">${st.n}</div>
+        <div class="srow-sub">${h.qty} shares • Avg ${fmtFull(h.avgPrice)}</div>
+      </div>
+      <div class="srow-right">
+        <div class="srow-price">${fmtINR(val)}</div>
+        <div class="srow-chg ${pnl>=0?"pos":"neg"}">${pnl>=0?"+":""}${fmtINR(pnl)} (${fmtChg(pnlP)})</div>
+      </div>
+    </div>`;
+  }).join("") + (keys.length>4?`<div style="text-align:center;padding:0.5rem;font-size:0.72rem;color:var(--primary);cursor:pointer" onclick="openAllHoldings()">+${keys.length-4} more holdings →</div>`:"");
+}
+
+function renderStockMarketList() {
+  let stocks = [...NSE_STOCKS];
+  if (currentStockFilter !== "all") stocks = stocks.filter(s=>s.sec===currentStockFilter || (currentStockFilter==="nifty50" && ["RELIANCE.NS","TCS.NS","HDFCBANK.NS","INFY.NS","ICICIBANK.NS","HINDUNILVR.NS","ITC.NS","SBIN.NS","BAJFINANCE.NS","MARUTI.NS","WIPRO.NS","SUNPHARMA.NS","TITAN.NS","LTIM.NS","AXISBANK.NS"].includes(s.s)));
+  const el = document.getElementById("stock-market-list");
+  if(!el) return;
+  el.innerHTML = stocks.map(st => stockRow(st)).join("");
+}
+
+// ════════════════════════════════════════════════════
+// BUY / SELL STOCKS
+// ════════════════════════════════════════════════════
+function openBuyStock(sym) {
+  const st = NSE_STOCKS.find(s=>s.s===sym);
+  if(!st) return;
+  pendingBuyStock = sym;
+  const price = stockPrices[sym]?.price || st.p;
+  const chg = stockPrices[sym]?.changeP || 0;
+  document.getElementById("buy-stock-title").textContent = `${st.em} ${st.n}`;
+  document.getElementById("buy-stock-info").innerHTML = `
+    <div class="card card-xs flex flex-b flex-c" style="margin-bottom:0.6rem">
+      <div><div style="font-size:0.72rem;color:var(--muted2)">Current Price</div>
+        <div style="font-family:var(--font-m);font-size:1.1rem;font-weight:700">${fmtFull(price)}</div></div>
+      <span class="badge ${chg>=0?"badge-up":"badge-down"}">${fmtChg(chg)}</span>
+    </div>
+    <div class="grid2" style="margin-bottom:0.5rem">
+      <div class="card card-xs"><div style="font-size:0.65rem;color:var(--muted2)">Div Yield</div><div class="gold-c" style="font-weight:700">${st.div}%</div></div>
+      <div class="card card-xs"><div style="font-size:0.65rem;color:var(--muted2)">Sector</div><div style="font-weight:600;text-transform:capitalize">${st.sec}</div></div>
+    </div>
+  `;
+  document.getElementById("buy-qty").value = 1;
+  document.getElementById("buy-cash-info").textContent = `Available: ${fmtFull(G.cash)}`;
+  updateBuyCost();
+  openModal("modal-buy-stock");
+}
+function updateBuyCost() {
+  if(!pendingBuyStock) return;
+  const qty = parseInt(document.getElementById("buy-qty").value)||1;
+  const price = stockPrices[pendingBuyStock]?.price || NSE_STOCKS.find(s=>s.s===pendingBuyStock)?.p || 0;
+  const total = qty * price;
+  document.getElementById("buy-total").textContent = fmtFull(total);
+  document.getElementById("buy-confirm-btn").style.opacity = total > G.cash ? "0.5" : "1";
+}
+function confirmBuyStock() {
+  if(!pendingBuyStock) return;
+  const qty = parseInt(document.getElementById("buy-qty").value)||1;
+  const st = NSE_STOCKS.find(s=>s.s===pendingBuyStock);
+  const price = stockPrices[pendingBuyStock]?.price || st.p;
+  const total = qty * price;
+  if (total > G.cash) { showNotif("❌ Insufficient cash!"); return; }
+  G.cash -= total;
+  const existing = G.holdings[pendingBuyStock];
+  if (existing) {
+    const newQty = existing.qty + qty;
+    G.holdings[pendingBuyStock] = {qty:newQty, avgPrice:(existing.avgPrice*existing.qty + price*qty)/newQty};
+  } else {
+    G.holdings[pendingBuyStock] = {qty, avgPrice:price};
+  }
+  G.earned.trading += 0;
+  closeModal("modal-buy-stock");
+  showNotif(`✅ Bought ${qty} shares of ${st.n} for ${fmtINR(total)}`);
+  saveGame();
+  renderAll();
+}
+
+function openHoldingDetail(sym) {
+  const st = NSE_STOCKS.find(s=>s.s===sym);
+  const h = G.holdings[sym];
+  if(!st||!h) return;
+  const price = stockPrices[sym]?.price || st.p;
+  const val = price * h.qty;
+  const pnl = (price - h.avgPrice) * h.qty;
+  const pnlP = h.avgPrice > 0 ? (price-h.avgPrice)/h.avgPrice*100 : 0;
+  document.getElementById("holding-detail-title").textContent = `${st.em} ${st.n}`;
+  document.getElementById("holding-detail-body").innerHTML = `
+    <div class="grid2" style="margin-bottom:0.9rem">
+      <div class="card card-xs"><div style="font-size:0.65rem;color:var(--muted2)">Shares</div><div style="font-family:var(--font-m);font-weight:700">${h.qty.toLocaleString()}</div></div>
+      <div class="card card-xs"><div style="font-size:0.65rem;color:var(--muted2)">Avg Price</div><div style="font-family:var(--font-m);font-weight:700">${fmtFull(h.avgPrice)}</div></div>
+      <div class="card card-xs"><div style="font-size:0.65rem;color:var(--muted2)">Current</div><div style="font-family:var(--font-m);font-weight:700">${fmtFull(price)}</div></div>
+      <div class="card card-xs"><div style="font-size:0.65rem;color:var(--muted2)">Value</div><div style="font-family:var(--font-m);font-weight:700">${fmtINR(val)}</div></div>
+    </div>
+    <div class="card card-xs flex flex-b flex-c" style="margin-bottom:0.9rem;background:${pnl>=0?"var(--green-dim)":"var(--red-dim)"}">
+      <span style="font-size:0.8rem">${pnl>=0?"📈 Profit":"📉 Loss"}</span>
+      <span class="${pnl>=0?"pos":"neg"}" style="font-family:var(--font-m);font-weight:700">${pnl>=0?"+":""}${fmtINR(pnl)} (${fmtChg(pnlP)})</span>
+    </div>
+    <div class="stat-row"><span class="stat-lbl">Annual Dividend</span><span class="stat-v gold-c">${fmtINR(price*h.qty*(st.div/100))}</span></div>
+    <div class="stat-row"><span class="stat-lbl">Div Yield</span><span class="stat-v">${st.div}%</span></div>
+  `;
+  document.getElementById("holding-detail-actions").innerHTML = `
+    <button class="btn btn-g btn-fw" onclick="openBuyMore('${sym}')">+ Buy More</button>
+    <button class="btn btn-d btn-fw" onclick="sellStockModal('${sym}')">Sell</button>
+  `;
+  openModal("modal-holding-detail");
+}
+function openBuyMore(sym) {
+  closeModal("modal-holding-detail");
+  openBuyStock(sym);
+}
+function sellStockModal(sym) {
+  const h = G.holdings[sym];
+  if(!h) return;
+  const st = NSE_STOCKS.find(s=>s.s===sym);
+  const price = stockPrices[sym]?.price || st.p;
+  const val = price * h.qty;
+  if(confirm(`Sell all ${h.qty} shares of ${st.n} for ${fmtFull(val)}?`)) {
+    G.cash += val;
+    const cost = h.avgPrice * h.qty;
+    const pnl = val - cost;
+    if(pnl > 0) G.earned.trading += pnl;
+    delete G.holdings[sym];
+    closeModal("modal-holding-detail");
+    showNotif(`✅ Sold ${h.qty} shares of ${st.n} for ${fmtINR(val)}`);
+    saveGame(); renderAll();
+  }
+}
+function openAllHoldings() {
+  const keys = Object.keys(G.holdings);
+  if(!keys.length) { showNotif("No holdings yet!"); return; }
+  document.getElementById("all-holdings-list").innerHTML = keys.map(sym => {
+    const h = G.holdings[sym];
+    const st = NSE_STOCKS.find(s=>s.s===sym);
+    if(!st) return "";
+    const price = stockPrices[sym]?.price || st.p;
+    const val = price * h.qty;
+    const pnl = (price-h.avgPrice)*h.qty;
+    const pnlP = h.avgPrice>0?(price-h.avgPrice)/h.avgPrice*100:0;
+    return `<div class="srow" onclick="openHoldingDetail('${sym}')">
+      <div class="srow-icon" style="background:${st.c}22;color:${st.c}">${st.em}</div>
+      <div class="srow-info"><div class="srow-name">${st.n}</div><div class="srow-sub">${h.qty} shares</div></div>
+      <div class="srow-right">
+        <div class="srow-price">${fmtINR(val)}</div>
+        <div class="srow-chg ${pnl>=0?"pos":"neg"}">${fmtChg(pnlP)}</div>
+      </div>
+    </div>`;
+  }).join("");
+  openModal("modal-holdings");
+}
+function filterStocks(f,el) {
+  currentStockFilter = f;
+  document.querySelectorAll("#stock-filter-chips .chip").forEach(c=>c.classList.remove("active"));
+  el.classList.add("active");
+  renderStockMarketList();
+}
+function openStockMarket() { renderStockMarketList(); openModal("modal-stocks"); }
+function openDivStocks() {
+  currentStockFilter = "all";
+  renderStockMarketList();
+  openModal("modal-stocks");
+}
+function openGrowthStocks() { openStockMarket(); }
+
+// ════════════════════════════════════════════════════
+// REAL ESTATE
+// ════════════════════════════════════════════════════
+function renderMyProperties() {
+  const owned = Object.keys(G.properties);
+  if(!owned.length) {
+    document.getElementById("my-properties").innerHTML = `<div style="text-align:center;color:var(--muted2);padding:1rem 0;font-size:0.82rem">No properties yet.</div>`;
+    return;
+  }
+  document.getElementById("my-properties").innerHTML = owned.map(pid => {
+    const p = RE_PROPERTIES.find(pr=>pr.id===pid);
+    if(!p) return "";
+    return `<div class="biz-card" onclick="">
+      <div class="biz-icon" style="background:var(--green-dim)">${p.img}</div>
+      <div class="biz-info">
+        <div class="biz-name">${p.type}</div>
+        <div class="biz-type">${p.city} • ${p.loc}</div>
+        <div class="biz-income">+${fmtINR(p.rent)}/mo rental</div>
+      </div>
+      <button class="btn btn-d btn-sm" onclick="sellProperty('${pid}',event)">Sell</button>
+    </div>`;
+  }).join("");
+}
+function renderREPortfolio() {
+  let val = 0, rent = 0;
+  Object.keys(G.properties).forEach(pid => {
+    const p = RE_PROPERTIES.find(pr=>pr.id===pid);
+    if(p) { val+=p.price; rent+=p.rent; }
+  });
+  document.getElementById("re-port-val").textContent = fmtFull(val);
+  document.getElementById("re-rental").textContent = fmtINR(rent) + "/mo";
+}
+function renderREMarketList() {
+  let props = [...RE_PROPERTIES];
+  if(currentREFilter !== "all") props = props.filter(p=>p.tag===currentREFilter);
+  const el = document.getElementById("re-market-list");
+  if(!el) return;
+  el.innerHTML = props.map(p => {
+    const owned = G.properties[p.id];
+    return `<div class="biz-card">
+      <div class="biz-icon" style="background:var(--green-dim);font-size:1.5rem">${p.img}</div>
+      <div class="biz-info">
+        <div class="biz-name">${p.type}</div>
+        <div class="biz-type">${p.city} • ${p.loc}</div>
+        <div class="biz-income">${fmtINR(p.rent)}/mo • Value ${fmtINR(p.price)}</div>
+      </div>
+      ${owned
+        ? `<span class="badge badge-up">Owned</span>`
+        : `<button class="btn btn-sm btn-p" onclick="buyProperty('${p.id}')">Buy<br><small>${fmtINR(p.price)}</small></button>`}
+    </div>`;
+  }).join("");
+}
+function openREMarket() { renderREMarketList(); openModal("modal-re-market"); }
+function filterRE(f,el) {
+  currentREFilter = f;
+  document.querySelectorAll("#re-filter-chips .chip").forEach(c=>c.classList.remove("active"));
+  el.classList.add("active");
+  renderREMarketList();
+}
+function buyProperty(pid) {
+  const p = RE_PROPERTIES.find(pr=>pr.id===pid);
+  if(!p) return;
+  if(G.properties[pid]) { showNotif("Already owned!"); return; }
+  if(G.cash < p.price) { showNotif("❌ Insufficient cash! Need " + fmtINR(p.price)); return; }
+  G.cash -= p.price;
+  G.properties[pid] = true;
+  showNotif(`🏠 Bought ${p.type} in ${p.city} for ${fmtINR(p.price)}!`);
+  saveGame(); renderAll(); renderREMarketList();
+}
+function sellProperty(pid, ev) {
+  if(ev) ev.stopPropagation();
+  const p = RE_PROPERTIES.find(pr=>pr.id===pid);
+  if(!p) return;
+  const sellPrice = p.price * 0.85;
+  if(confirm(`Sell ${p.type} in ${p.city} for ${fmtINR(sellPrice)} (85% of value)?`)) {
+    G.cash += sellPrice;
+    delete G.properties[pid];
+    showNotif(`✅ Sold property for ${fmtINR(sellPrice)}`);
+    saveGame(); renderAll();
+  }
+}
+
+// ════════════════════════════════════════════════════
+// CRYPTO
+// ════════════════════════════════════════════════════
+function renderMyCryptoList() {
+  const keys = Object.keys(G.cryptoHoldings);
+  if(!keys.length) {
+    document.getElementById("my-crypto-list").innerHTML = `<div style="text-align:center;color:var(--muted2);padding:1rem 0;font-size:0.82rem">No crypto yet.</div>`;
+    return;
+  }
+  document.getElementById("my-crypto-list").innerHTML = keys.map(id => {
+    const h = G.cryptoHoldings[id];
+    const c = CRYPTO_LIST.find(x=>x.id===id);
+    if(!c) return "";
+    const price = cryptoPrices[id]?.price||c.p;
+    const val = price*h.qty;
+    const pnl = (price-h.avgPrice)*h.qty;
+    const pnlP = h.avgPrice>0?(price-h.avgPrice)/h.avgPrice*100:0;
+    return `<div class="srow">
+      <div class="srow-icon" style="background:${c.c}22;color:${c.c};border-radius:50%">${c.em}</div>
+      <div class="srow-info"><div class="srow-name">${c.n}</div><div class="srow-sub">${h.qty} ${c.s}</div></div>
+      <div class="srow-right">
+        <div class="srow-price">${fmtINR(val)}</div>
+        <div class="srow-chg ${pnl>=0?"pos":"neg"}">${pnl>=0?"+":""}${fmtINR(pnl)} (${fmtChg(pnlP)})</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+function renderCryptoMarket() {
+  let list = [...CRYPTO_LIST];
+  if(currentCryptoFilter==="gainers") list = list.filter(c=>(cryptoPrices[c.id]?.change24h||0)>0).sort((a,b)=>(cryptoPrices[b.id]?.change24h||0)-(cryptoPrices[a.id]?.change24h||0));
+  if(currentCryptoFilter==="losers") list = list.filter(c=>(cryptoPrices[c.id]?.change24h||0)<0).sort((a,b)=>(cryptoPrices[a.id]?.change24h||0)-(cryptoPrices[b.id]?.change24h||0));
+  const el = document.getElementById("crypto-market");
+  if(!el) return;
+  el.innerHTML = list.map(c => {
+    const price = cryptoPrices[c.id]?.price||c.p;
+    const chg = cryptoPrices[c.id]?.change24h||0;
+    return `<div class="srow" onclick="openBuyCrypto('${c.id}')">
+      <div class="srow-icon" style="background:${c.c}22;color:${c.c};border-radius:50%;font-weight:700">${c.em}</div>
+      <div class="srow-info"><div class="srow-name">${c.n}</div><div class="srow-sub">${c.s}</div></div>
+      <div class="srow-right">
+        <div class="srow-price">${fmtFull(price)}</div>
+        <div class="srow-chg ${chg>=0?"pos":"neg"}">${fmtChg(chg)} (24h)</div>
+      </div>
+    </div>`;
+  }).join("");
+  const exEl = document.getElementById("crypto-exchange-list");
+  if(exEl) exEl.innerHTML = el.innerHTML;
+}
+function openCryptoExchange() { renderCryptoMarket(); openModal("modal-crypto"); }
+function filterCrypto(f,el) {
+  currentCryptoFilter=f;
+  document.querySelectorAll("#modal-crypto .chip").forEach(c=>c.classList.remove("active"));
+  el.classList.add("active");
+  renderCryptoMarket();
+}
+function openBuyCrypto(id) {
+  const c = CRYPTO_LIST.find(x=>x.id===id);
+  if(!c) return;
+  pendingBuyStock = null; pendingBuyCrypto = id;
+  const price = cryptoPrices[id]?.price||c.p;
+  document.getElementById("buy-stock-title").textContent = `${c.em} ${c.n}`;
+  document.getElementById("buy-stock-info").innerHTML = `
+    <div class="card card-xs flex flex-b flex-c" style="margin-bottom:0.6rem">
+      <div><div style="font-size:0.72rem;color:var(--muted2)">Price (INR)</div>
+        <div style="font-family:var(--font-m);font-size:1.1rem;font-weight:700">${fmtFull(price)}</div></div>
+      <span class="badge ${(cryptoPrices[id]?.change24h||0)>=0?"badge-up":"badge-down"}">${fmtChg(cryptoPrices[id]?.change24h||0)} 24h</span>
+    </div>`;
+  document.getElementById("buy-qty").value = 1;
+  document.getElementById("buy-cash-info").textContent = `Available: ${fmtFull(G.cash)}`;
+  updateCryptoCost();
+  openModal("modal-buy-stock");
+  document.querySelector("#modal-buy-stock .modal-title").style.display="none";
+  document.getElementById("buy-confirm-btn").onclick = confirmBuyCrypto;
+}
+function updateCryptoCost() {
+  if(!pendingBuyCrypto) { updateBuyCost(); return; }
+  const qty = parseFloat(document.getElementById("buy-qty").value)||1;
+  const c = CRYPTO_LIST.find(x=>x.id===pendingBuyCrypto);
+  const price = cryptoPrices[pendingBuyCrypto]?.price||c.p;
+  document.getElementById("buy-total").textContent = fmtFull(qty*price);
+  document.getElementById("buy-confirm-btn").style.opacity = qty*price>G.cash?"0.5":"1";
+}
+function confirmBuyCrypto() {
+  if(!pendingBuyCrypto) return;
+  const qty = parseFloat(document.getElementById("buy-qty").value)||1;
+  const c = CRYPTO_LIST.find(x=>x.id===pendingBuyCrypto);
+  const price = cryptoPrices[pendingBuyCrypto]?.price||c.p;
+  const total = qty*price;
+  if(total>G.cash){showNotif("❌ Insufficient cash!");return;}
+  G.cash -= total;
+  const ex = G.cryptoHoldings[pendingBuyCrypto];
+  if(ex){const nq=ex.qty+qty;G.cryptoHoldings[pendingBuyCrypto]={qty:nq,avgPrice:(ex.avgPrice*ex.qty+price*qty)/nq};}
+  else G.cryptoHoldings[pendingBuyCrypto]={qty,avgPrice:price};
+  closeModal("modal-buy-stock");
+  showNotif(`✅ Bought ${qty} ${c.s} for ${fmtINR(total)}`);
+  pendingBuyCrypto = null;
+  document.getElementById("buy-confirm-btn").onclick = confirmBuyStock;
+  saveGame(); renderAll();
+}
+
+// ════════════════════════════════════════════════════
+// BUSINESS
+// ════════════════════════════════════════════════════
+function renderBusinesses() {
+  const el = document.getElementById("my-companies");
+  document.getElementById("biz-slots").textContent = G.businesses.length + "/10";
+  const iph = G.businesses.reduce((a,b)=>a+b.income,0);
+  document.getElementById("biz-income-ttl").textContent = fmtINR(iph) + "/hr";
+  if(!G.businesses.length){
+    el.innerHTML=`<div style="text-align:center;color:var(--muted2);padding:2rem 0;font-size:0.82rem">No businesses yet. Start one!</div>`;
+    return;
+  }
+  el.innerHTML = G.businesses.map((b,i) => {
+    const cat = BIZ_CATEGORIES.find(c=>c.cat===b.cat);
+    return `<div class="biz-card" onclick="openBizDetail(${i})">
+      <div class="biz-icon" style="background:${cat.color}22">${cat.em}</div>
+      <div class="biz-info">
+        <div class="biz-name">${b.name}</div>
+        <div class="biz-type">${cat.label} • Level ${b.level}</div>
+        <div class="biz-income">+${fmtINR(b.income)}/hr</div>
+      </div>
+      <div style="text-align:right">
+        <span class="badge badge-primary">Lv.${b.level}</span>
+      </div>
+    </div>`;
+  }).join("");
+}
+function openStartBiz() {
+  if(G.businesses.length>=10){showNotif("❌ Max 10 businesses!");return;}
+  document.getElementById("biz-categories-list").innerHTML = BIZ_CATEGORIES.map(cat=>{
+    const canAfford = G.cash >= cat.priceBase;
+    return `<div class="biz-card" style="${canAfford?"":"opacity:0.55"}" onclick="${canAfford?`confirmStartBiz('${cat.cat}')`:``}">
+      <div class="biz-icon" style="background:${cat.color}22">${cat.em}</div>
+      <div class="biz-info">
+        <div class="biz-name">${cat.label}</div>
+        <div class="biz-type">${cat.desc}</div>
+        <div class="biz-income">Income: +${fmtINR(cat.incomeBase)}/hr</div>
+      </div>
+      <button class="btn btn-sm ${canAfford?"btn-g":"btn-o"}" onclick="${canAfford?`confirmStartBiz('${cat.cat}')`:``}" style="pointer-events:none">
+        ${fmtINR(cat.priceBase)}
+      </button>
+    </div>`;
+  }).join("");
+  openModal("modal-start-biz");
+}
+function confirmStartBiz(cat) {
+  const c = BIZ_CATEGORIES.find(x=>x.cat===cat);
+  if(!c||G.cash<c.priceBase){showNotif("❌ Not enough cash!");return;}
+  const name = c.label + " #" + (G.businesses.filter(b=>b.cat===cat).length+1);
+  G.cash -= c.priceBase;
+  G.businesses.push({cat,name,level:1,income:c.incomeBase,invested:c.priceBase});
+  closeModal("modal-start-biz");
+  showNotif(`🏢 ${name} started! Income: +${fmtINR(c.incomeBase)}/hr`);
+  saveGame(); renderAll();
+}
+function openBizDetail(idx) {
+  const b = G.businesses[idx];
+  const cat = BIZ_CATEGORIES.find(c=>c.cat===b.cat);
+  const upgradeCost = b.invested * 0.5 * b.level;
+  const upgradeIncome = Math.round(b.income * 0.4);
+  document.getElementById("biz-detail-body").innerHTML = `
+    <div style="margin-bottom:0.9rem">
+      <div style="font-size:2rem;margin-bottom:0.4rem">${cat.em}</div>
+      <div style="font-size:1rem;font-weight:700">${b.name}</div>
+      <div style="font-size:0.72rem;color:var(--muted2)">${cat.label} • Level ${b.level}</div>
+    </div>
+    <div class="grid2" style="margin-bottom:0.9rem">
+      <div class="card card-xs"><div style="font-size:0.65rem;color:var(--muted2)">Income/hr</div><div class="pos" style="font-family:var(--font-m);font-weight:700">${fmtINR(b.income)}</div></div>
+      <div class="card card-xs"><div style="font-size:0.65rem;color:var(--muted2)">Invested</div><div style="font-family:var(--font-m);font-weight:700">${fmtINR(b.invested)}</div></div>
+    </div>
+    <button class="btn btn-g btn-fw" onclick="upgradeBiz(${idx})" style="margin-bottom:0.6rem">
+      ⬆ Upgrade to Level ${b.level+1} — ${fmtINR(upgradeCost)} (+${fmtINR(upgradeIncome)}/hr)
+    </button>
+    <button class="btn btn-d btn-fw" onclick="sellBiz(${idx})">Sell Business (${fmtINR(b.invested*0.6)})</button>
+  `;
+  openModal("modal-biz-detail");
+}
+function upgradeBiz(idx) {
+  const b = G.businesses[idx];
+  const cost = b.invested * 0.5 * b.level;
+  if(G.cash<cost){showNotif("❌ Not enough cash!");return;}
+  G.cash -= cost;
+  b.level++;
+  b.income = Math.round(b.income * 1.4);
+  b.invested += cost;
+  closeModal("modal-biz-detail");
+  showNotif(`✅ ${b.name} upgraded to Level ${b.level}!`);
+  saveGame(); renderAll();
+}
+function sellBiz(idx) {
+  const b = G.businesses[idx];
+  const val = b.invested*0.6;
+  if(confirm(`Sell ${b.name} for ${fmtINR(val)}?`)) {
+    G.cash += val;
+    G.businesses.splice(idx,1);
+    closeModal("modal-biz-detail");
+    showNotif(`✅ Sold ${b.name} for ${fmtINR(val)}`);
+    saveGame(); renderAll();
+  }
+}
+
+// ════════════════════════════════════════════════════
+// CLICKER / EARNINGS
+// ════════════════════════════════════════════════════
+function clickEarn(event) {
+  G.cash += G.clickPower;
+  G.earned.clicker += G.clickPower;
+  G.totalClicks++;
+  G.clickXP++;
+  // Float animation
+  const rect = document.getElementById("clicker-btn").getBoundingClientRect();
+  const el = document.createElement("div");
+  el.className = "float-coin";
+  el.textContent = "+" + fmtINR(G.clickPower);
+  el.style.left = (rect.left + rect.width/2 - 30) + "px";
+  el.style.top = (rect.top - 10) + "px";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+  // Level up check
+  if (G.clickXP >= G.clickLevel * 50) {
+    G.clickXP = 0;
+    G.clickLevel++;
+    G.clickPower = Math.round(G.clickPower * 1.5);
+    showNotif(`🎉 Click Power Level ${G.clickLevel}! Now earning ${fmtINR(G.clickPower)}/tap`);
+  }
+  updateHeader();
+  renderEarnings();
+}
+function upgradeClick() {
+  const cost = G.clickPower * 100 * G.clickLevel;
+  if(G.cash<cost){showNotif(`Need ${fmtINR(cost)} to upgrade!`);return;}
+  G.cash -= cost;
+  G.clickPower = Math.round(G.clickPower * 2);
+  G.clickLevel++;
+  showNotif(`⬆ Click power upgraded! Now ${fmtINR(G.clickPower)}/tap`);
+  saveGame(); renderEarnings(); updateHeader();
+}
+function renderEarnings() {
+  document.getElementById("earn-balance").textContent = fmtFull(G.cash);
+  document.getElementById("earn-per-click").textContent = fmtINR(G.clickPower) + " per click";
+  document.getElementById("click-lvl").textContent = "Level " + G.clickLevel;
+  document.getElementById("click-progress").style.width = Math.min((G.clickXP/(G.clickLevel*50))*100,100)+"%";
+  const upgCost = G.clickPower * 100 * G.clickLevel;
+  document.getElementById("upgrade-btn").textContent = "⬆ " + fmtINR(upgCost);
+  // Summary
+  const items = [
+    {label:"Clicker Earnings",val:G.earned.clicker,em:"👆"},
+    {label:"Business Income",val:G.earned.business,em:"🏢"},
+    {label:"Rental Income",val:G.earned.rent,em:"🏠"},
+    {label:"Dividends",val:G.earned.dividends,em:"💎"},
+    {label:"Stock Trading",val:G.earned.trading,em:"📈"},
+    {label:"Crypto Trading",val:G.earned.crypto,em:"₿"},
+  ];
+  document.getElementById("earn-summary").innerHTML = items.map(it =>
+    `<div class="stat-row"><span class="stat-lbl">${it.em} ${it.label}</span><span class="stat-v pos">+${fmtINR(it.val)}</span></div>`
+  ).join("");
+  renderFortuneDonut();
+}
+function renderFortuneDonut() {
+  // Breakdown
+  let stockVal=0,reVal=0,cryptoVal=0,bizVal=0;
+  Object.entries(G.holdings).forEach(([sym,h])=>stockVal+=(stockPrices[sym]?.price||0)*h.qty);
+  Object.keys(G.properties).forEach(pid=>{const p=RE_PROPERTIES.find(x=>x.id===pid);if(p)reVal+=p.price;});
+  Object.entries(G.cryptoHoldings).forEach(([id,h])=>cryptoVal+=(cryptoPrices[id]?.price||0)*h.qty);
+  G.businesses.forEach(b=>bizVal+=b.invested||0);
+  const total=G.cash+stockVal+reVal+cryptoVal+bizVal||1;
+  const segments=[
+    {label:"Cash",val:G.cash,color:"#00C6FF"},
+    {label:"Stocks",val:stockVal,color:"#00E676"},
+    {label:"Real Estate",val:reVal,color:"#FFB800"},
+    {label:"Crypto",val:cryptoVal,color:"#F97316"},
+    {label:"Business",val:bizVal,color:"#A855F7"},
+  ].filter(s=>s.val>0);
+  document.getElementById("fortune-breakdown").innerHTML = segments.map(s =>
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.8rem">
+      <span style="display:flex;align-items:center;gap:6px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block"></span>
+        ${s.label}
+      </span>
+      <span style="font-family:var(--font-m);font-weight:600">${fmtINR(s.val)} (${(s.val/total*100).toFixed(1)}%)</span>
+    </div>`
+  ).join("");
+  // Draw donut
+  const canvas = document.getElementById("fortune-donut");
+  const ctx = canvas.getContext("2d");
+  const W=canvas.width, H=canvas.height, cx=W/2, cy=H/2, r=70, innerR=45;
+  ctx.clearRect(0,0,W,H);
+  if(!segments.length) return;
+  let start = -Math.PI/2;
+  segments.forEach(s => {
+    const sweep = (s.val/total)*Math.PI*2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,start+sweep);
+    ctx.closePath();
+    ctx.fillStyle = s.color;
+    ctx.fill();
+    start += sweep;
+  });
+  ctx.beginPath();
+  ctx.arc(cx,cy,innerR,0,Math.PI*2);
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--card").trim()||"#101E30";
+  ctx.fill();
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--text").trim()||"#E8F2FF";
+  ctx.font = "bold 11px JetBrains Mono";
+  ctx.textAlign = "center";
+  ctx.fillText(fmtINR(total), cx, cy+4);
+}
+
+// ════════════════════════════════════════════════════
+// CARDS
+// ════════════════════════════════════════════════════
+const CARD_TIERS = [
+  {tier:"Bronze",bg:"linear-gradient(135deg,#92400E,#B45309)",from:0},
+  {tier:"Silver",bg:"linear-gradient(135deg,#6B7280,#9CA3AF)",from:100000},
+  {tier:"Gold",bg:"linear-gradient(135deg,#B45309,#FFB800)",from:1000000},
+  {tier:"Platinum",bg:"linear-gradient(135deg,#374151,#9CA3AF)",from:10000000},
+  {tier:"Black Deluxe",bg:"linear-gradient(135deg,#111827,#374151)",from:100000000},
+  {tier:"Diamond",bg:"linear-gradient(135deg,#1E3A8A,#7C3AED)",from:1000000000},
+];
+function renderCards() {
+  const fortune = getTotalFortune();
+  const unlocked = CARD_TIERS.filter(c=>fortune>=c.from);
+  const el = document.getElementById("cards-display");
+  el.innerHTML = unlocked.map(c => `
+    <div class="card-vis" style="background:${c.bg}">
+      <div class="cv-shine"></div>
+      <div class="cv-tier">${c.tier.toUpperCase()}</div>
+      <div class="cv-num">**** **** **** 7439</div>
+      <div class="cv-bal-l">Balance</div>
+      <div class="cv-bal">${fmtINR(fortune)}</div>
+      <div class="cv-name">DHAN EMPIRE</div>
+    </div>`).join("");
+}
+
+// ════════════════════════════════════════════════════
+// ITEMS
+// ════════════════════════════════════════════════════
+function renderItems() {
+  document.getElementById("cnt-cars").textContent = G.transport.cars.length + " cars";
+  document.getElementById("cnt-aircraft").textContent = G.transport.aircraft.length + " jets";
+  document.getElementById("cnt-yachts").textContent = G.transport.yachts.length + " yachts";
+  document.getElementById("cnt-coins").textContent = G.collections.coins.length + "/20";
+  document.getElementById("cnt-paintings").textContent = G.collections.paintings.length + "/20";
+  document.getElementById("cnt-jewels").textContent = G.collections.jewels.length + "/20";
+  document.getElementById("cnt-nfts").textContent = G.collections.nfts.length + "/21";
+  document.getElementById("cnt-islands").textContent = G.collections.islands.length + "/5";
+  document.getElementById("cnt-stamps").textContent = G.collections.stamps.length + "/15";
+}
+function openItemShop(cat) {
+  currentItemShop = cat;
+  const items = TRANSPORT_ITEMS[cat];
+  const catLabel = cat==="cars"?"🚗 Garage":cat==="aircraft"?"✈️ Hangar":"🛥️ Harbor";
+  document.getElementById("item-shop-title").textContent = catLabel;
+  const owned = G.transport[cat];
+  document.getElementById("item-shop-body").innerHTML = items.map(item => {
+    const isOwned = owned.includes(item.id);
+    return `<div class="biz-card">
+      <div style="font-size:1.8rem;margin-right:0.5rem">${item.em}</div>
+      <div class="biz-info">
+        <div class="biz-name">${item.n}</div>
+        <div class="biz-income">+${fmtINR(item.income)}/hr</div>
+      </div>
+      ${isOwned
+        ? `<span class="badge badge-up">Owned</span>`
+        : `<button class="btn btn-sm btn-g" onclick="buyTransport('${cat}','${item.id}')">
+             ${fmtINR(item.price)}
+           </button>`}
+    </div>`;
+  }).join("");
+  openModal("modal-item-shop");
+}
+function buyTransport(cat, itemId) {
+  const item = TRANSPORT_ITEMS[cat].find(i=>i.id===itemId);
+  if(!item) return;
+  if(G.cash<item.price){showNotif("❌ Not enough cash!");return;}
+  G.cash -= item.price;
+  G.transport[cat].push(itemId);
+  showNotif(`✅ Bought ${item.n}!`);
+  saveGame(); renderAll();
+  openItemShop(cat);
+}
+function openResidence() { showNotif("🏛️ Mansion builder — coming in next update!"); }
+function openCollection(type) {
+  const items = COLLECTIONS[type]||[];
+  const owned = G.collections[type]||[];
+  document.getElementById("item-shop-title").textContent = type.charAt(0).toUpperCase()+type.slice(1);
+  document.getElementById("item-shop-body").innerHTML = items.map(item => {
+    const isOwned = owned.includes(item.id);
+    const rColor = item.rare==="legendary"?"var(--gold)":item.rare==="epic"?"var(--purple)":"var(--primary)";
+    return `<div class="biz-card">
+      <div style="font-size:1.6rem">${item.em}</div>
+      <div class="biz-info">
+        <div class="biz-name">${item.n}</div>
+        <div style="font-size:0.68rem;font-weight:700;color:${rColor};text-transform:capitalize">${item.rare}</div>
+      </div>
+      ${isOwned
+        ? `<span class="badge badge-up">Owned</span>`
+        : `<button class="btn btn-sm btn-g" onclick="buyCollectionItem('${type}','${item.id}')">
+             ${fmtINR(item.price)}
+           </button>`}
+    </div>`;
+  }).join("");
+  openModal("modal-item-shop");
+}
+function buyCollectionItem(type, itemId) {
+  const item = (COLLECTIONS[type]||[]).find(i=>i.id===itemId);
+  if(!item) return;
+  if(G.cash<item.price){showNotif("❌ Not enough cash!");return;}
+  G.cash -= item.price;
+  if(!G.collections[type]) G.collections[type]=[];
+  G.collections[type].push(itemId);
+  showNotif(`✅ Collected: ${item.n}!`);
+  saveGame(); renderAll(); openCollection(type);
+}
+
+// ════════════════════════════════════════════════════
+// PROFILE
+// ════════════════════════════════════════════════════
+function renderProfile() {
+  const fortune = getTotalFortune();
+  document.getElementById("profile-fortune").textContent = fmtFull(fortune);
+  document.getElementById("profile-name").textContent = G.name;
+  document.getElementById("profile-av").textContent = G.avatar;
+  // Rank tag
+  const rank = getRankAmongRich(fortune);
+  document.getElementById("profile-rank-tag").textContent = `Rank #${rank} • ${getWealthTitle(fortune)}`;
+
+  let stockVal=0,reVal=0,cryptoVal=0,bizVal=0,transportVal=0,collectionVal=0;
+  Object.entries(G.holdings).forEach(([sym,h])=>stockVal+=(stockPrices[sym]?.price||0)*h.qty);
+  Object.keys(G.properties).forEach(pid=>{const p=RE_PROPERTIES.find(x=>x.id===pid);if(p)reVal+=p.price;});
+  Object.entries(G.cryptoHoldings).forEach(([id,h])=>cryptoVal+=(cryptoPrices[id]?.price||0)*h.qty);
+  G.businesses.forEach(b=>bizVal+=b.invested||0);
+  [...G.transport.cars,...G.transport.aircraft,...G.transport.yachts].forEach(itemId=>{
+    ["cars","aircraft","yachts"].forEach(cat=>{
+      const item=TRANSPORT_ITEMS[cat].find(i=>i.id===itemId);
+      if(item)transportVal+=item.price*0.7;
+    });
+  });
+
+  const breakdown=[
+    {label:"Cash",val:G.cash,em:"💵"},
+    {label:"Stocks",val:stockVal,em:"📈"},
+    {label:"Real Estate",val:reVal,em:"🏢"},
+    {label:"Crypto",val:cryptoVal,em:"₿"},
+    {label:"Business",val:bizVal,em:"🏭"},
+    {label:"Transport",val:transportVal,em:"🚗"},
+    {label:"Collections",val:collectionVal,em:"🏆"},
+  ];
+  document.getElementById("profile-breakdown").innerHTML = breakdown.map(b =>
+    `<div class="stat-row"><span class="stat-lbl">${b.em} ${b.label}</span><span class="stat-v">${fmtINR(b.val)}</span></div>`
+  ).join("");
+
+  document.getElementById("profile-stats").innerHTML = `
+    <div class="stat-row"><span class="stat-lbl">Businesses</span><span class="stat-v">${G.businesses.length}/10</span></div>
+    <div class="stat-row"><span class="stat-lbl">Properties</span><span class="stat-v">${Object.keys(G.properties).length}</span></div>
+    <div class="stat-row"><span class="stat-lbl">Stock Holdings</span><span class="stat-v">${Object.keys(G.holdings).length}</span></div>
+    <div class="stat-row"><span class="stat-lbl">Crypto Holdings</span><span class="stat-v">${Object.keys(G.cryptoHoldings).length}</span></div>
+    <div class="stat-row"><span class="stat-lbl">Total Clicks</span><span class="stat-v">${G.totalClicks.toLocaleString()}</span></div>
+    <div class="stat-row"><span class="stat-lbl">Click Level</span><span class="stat-v">Level ${G.clickLevel}</span></div>
+  `;
+  document.getElementById("profile-earned").innerHTML = [
+    ["Clicker","👆",G.earned.clicker],
+    ["Business","🏢",G.earned.business],
+    ["Rent","🏠",G.earned.rent],
+    ["Dividends","💎",G.earned.dividends],
+    ["Stock Trading","📈",G.earned.trading],
+    ["Crypto","₿",G.earned.crypto],
+  ].map(([l,e,v])=>`<div class="stat-row"><span class="stat-lbl">${e} ${l}</span><span class="stat-v pos">+${fmtINR(v)}</span></div>`).join("");
+}
+function getWealthTitle(v) {
+  if(v>=1e12) return "Trillionaire 👑";
+  if(v>=1e11) return "Super Rich 💎";
+  if(v>=1e10) return "Billionaire 🌟";
+  if(v>=1e9) return "Arab-pati 🏆";
+  if(v>=1e8) return "Crorepati 🎯";
+  if(v>=1e7) return "Lakhpati ⭐";
+  return "Entrepreneur 🌱";
+}
+function getRankAmongRich(fortune) {
+  const allWorths=[...GLOBAL_RICH,...INDIA_RICH].map(r=>{
+    const n=parseFloat(r.worth.replace(/[₹,]/g,"").replace("L Cr","e12").replace("Arab","e9").replace("Cr","e7").replace("L","e5"))||0;
+    return n;
+  });
+  return allWorths.filter(w=>w>fortune).length+1;
+}
+
+// ════════════════════════════════════════════════════
+// RANKINGS
+// ════════════════════════════════════════════════════
+function openRankings() { renderRankings(); openModal("modal-rankings"); }
+function filterRankings(f,el) {
+  currentRankingsFilter=f;
+  document.querySelectorAll("#modal-rankings .chip").forEach(c=>c.classList.remove("active"));
+  el.classList.add("active");
+  renderRankings();
+}
+function renderRankings() {
+  const list = currentRankingsFilter==="india" ? INDIA_RICH : GLOBAL_RICH;
+  const fortune = getTotalFortune();
+  const playerWorth = fmtINR(fortune);
+  const el = document.getElementById("rankings-list");
+  let html = list.map((r,i) => `
+    <div class="rank-row">
+      <div class="rank-num ${i===0?"g":i===1?"s":i===2?"b":""}">${i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1)}</div>
+      <div class="rank-av" style="background:var(--border2);font-size:0.72rem">${r.av}</div>
+      <div class="rank-info"><div class="rank-name">${r.name}</div><div class="rank-type">${r.type}</div></div>
+      <div class="rank-worth">${r.worth}</div>
+    </div>`).join("");
+  html += `<div style="text-align:center;padding:0.5rem 0;color:var(--muted2);font-size:0.72rem;font-family:var(--font-m)">— — — —</div>`;
+  html += `<div class="rank-row me">
+    <div class="rank-num pc">#${getRankAmongRich(fortune)}</div>
+    <div class="rank-av">${G.avatar}</div>
+    <div class="rank-info"><div class="rank-name">${G.name} (You)</div><div class="rank-type">${getWealthTitle(fortune)}</div></div>
+    <div class="rank-worth pc">${playerWorth}</div>
+  </div>`;
+  el.innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════════
+const THEMES = [
+  {id:"default",label:"Midnight Blue",bg:"#0C1628",accent:"#00C6FF"},
+  {id:"light",label:"Soft Light",bg:"#EEF2FF",accent:"#5B2EFF"},
+  {id:"gold",label:"Gold Rush",bg:"#0A0800",accent:"#FFB800"},
+  {id:"saffron",label:"Saffron 🇮🇳",bg:"#100500",accent:"#FF6B00"},
+  {id:"neon",label:"Cyber Neon",bg:"#000508",accent:"#00FFF0"},
+  {id:"midnight",label:"Deep Purple",bg:"#0D0D1A",accent:"#818CF8"},
+];
+const AVATARS = ["👑","💰","🦁","🐉","🦅","🔥","⚡","🏆","💎","🚀","🌟","🎯"];
+
+function renderSettings() {
+  document.getElementById("settings-name").value = G.name;
+  // Theme swatches
+  document.getElementById("theme-swatches").innerHTML = THEMES.map(t =>
+    `<div class="theme-sw ${G.theme===t.id?"active":""}" style="background:${t.bg};border:3px solid ${t.accent}" onclick="applyTheme('${t.id}')" title="${t.label}"></div>`
+  ).join("");
+  const cur = THEMES.find(t=>t.id===G.theme)||THEMES[0];
+  document.getElementById("theme-name-display").textContent = "Current: " + cur.label;
+  // Avatar picker
+  document.getElementById("avatar-picker").innerHTML = AVATARS.map(av =>
+    `<div onclick="setAvatar('${av}')" style="font-size:1.6rem;cursor:pointer;padding:0.3rem;border-radius:8px;
+      border:2px solid ${G.avatar===av?"var(--primary)":"transparent"};transition:all 0.2s">${av}</div>`
+  ).join("");
+  // Real holdings
+  renderRealHoldingsList();
+  // Populate real stock select
+  const sel = document.getElementById("real-stock-select");
+  if(sel) sel.innerHTML = NSE_STOCKS.map(s=>`<option value="${s.s}">${s.n} (${s.s.replace(".NS","")})</option>`).join("");
+}
+function applyTheme(id) {
+  document.documentElement.setAttribute("data-theme", id==="default"?"":id);
+  G.theme = id;
+  saveGame();
+  renderSettings();
+}
+function setAvatar(av) {
+  G.avatar = av;
+  document.getElementById("profile-av").textContent = av;
+  saveGame();
+  renderSettings();
+}
+function saveSettingsName() {
+  const n = document.getElementById("settings-name").value.trim();
+  if(n) { G.name = n; saveGame(); renderProfile(); }
+}
+function openSettings() { renderSettings(); openModal("modal-settings"); }
+
+// Real Holdings
+function openAddRealStock() { renderSettings(); openModal("modal-add-real-stock"); }
+function saveRealStock() {
+  const sym = document.getElementById("real-stock-select").value;
+  const qty = parseInt(document.getElementById("real-stock-qty").value)||0;
+  const price = parseFloat(document.getElementById("real-stock-price").value)||0;
+  if(!qty||!price){showNotif("Please enter valid quantity and price");return;}
+  G.realHoldings[sym] = {qty, avgPrice:price};
+  // Mirror to game holdings for tracking
+  const existing = G.holdings[sym];
+  if(existing){ const nq=existing.qty+qty; G.holdings[sym]={qty:nq,avgPrice:(existing.avgPrice*existing.qty+price*qty)/nq}; }
+  else G.holdings[sym] = {qty,avgPrice:price};
+  closeModal("modal-add-real-stock");
+  showNotif(`✅ Real holding added: ${qty} shares of ${sym.replace(".NS","")}`);
+  saveGame(); renderAll();
+}
+function renderRealHoldingsList() {
+  const keys = Object.keys(G.realHoldings);
+  const el = document.getElementById("real-holdings-list");
+  if(!el) return;
+  if(!keys.length){el.innerHTML=`<div style="font-size:0.72rem;color:var(--muted2);text-align:center;padding:0.5rem">No real holdings added yet.</div>`;return;}
+  el.innerHTML = keys.map(sym=>{
+    const h=G.realHoldings[sym];
+    const st=NSE_STOCKS.find(s=>s.s===sym);
+    const price=stockPrices[sym]?.price||st?.p||0;
+    const pnl=(price-h.avgPrice)*h.qty;
+    return `<div class="srow">
+      <div style="font-size:1.2rem">${st?.em||"📊"}</div>
+      <div class="srow-info"><div class="srow-name">${st?.n||sym}</div><div class="srow-sub">${h.qty} real shares</div></div>
+      <div class="srow-right">
+        <div class="srow-chg ${pnl>=0?"pos":"neg"}">${pnl>=0?"+":""}${fmtINR(pnl)}</div>
+        <button class="btn btn-sm btn-d" onclick="removeRealHolding('${sym}')">✕</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+function removeRealHolding(sym) {
+  delete G.realHoldings[sym];
+  showNotif("Removed real holding");
+  saveGame(); renderRealHoldingsList();
+}
+function confirmReset() {
+  if(confirm("⚠️ Reset ALL game data? This cannot be undone!")) {
+    localStorage.removeItem("dhan_empire_v1");
+    location.reload();
+  }
+}
+
+// ════════════════════════════════════════════════════
+// TAB NAVIGATION
+// ════════════════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  document.getElementById("sec-"+tab).classList.add("active");
+  document.getElementById("nav-"+tab).classList.add("active");
+  if(tab==="earnings") renderEarnings();
+  if(tab==="profile") renderProfile();
+  if(tab==="items") renderItems();
+}
+function switchInvTab(tab, el) {
+  document.querySelectorAll(".tabs .tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById("inv-shares").style.display = "none";
+  document.getElementById("inv-realestate").style.display = "none";
+  document.getElementById("inv-crypto").style.display = "none";
+  document.getElementById("inv-"+tab).style.display = "";
+  if(tab==="crypto") { renderMyCryptoList(); renderCryptoMarket(); }
+  if(tab==="realestate") { renderMyProperties(); renderREPortfolio(); }
+}
+
+// ════════════════════════════════════════════════════
+// MODAL HELPERS
+// ════════════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+document.querySelectorAll(".overlay").forEach(ov => {
+  ov.addEventListener("click", function(e) {
+    if(e.target===this) this.classList.remove("open");
+  });
+});
+
+// ════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ════════════════════════════════════════════════════
+function showNotif(msg) {
+  const el = document.createElement("div");
+  el.className = "notif"; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 3200);
+}
+
+// ════════════════════════════════════════════════════
+// SETTINGS NAME SAVE on input
+// ════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", ()=>{
+  const inp = document.getElementById("settings-name");
+  if(inp) inp.addEventListener("change", saveSettingsName);
+  // Update buy cost for crypto too
+  const qtyInp = document.getElementById("buy-qty");
+  if(qtyInp) qtyInp.addEventListener("input", ()=>{ pendingBuyCrypto?updateCryptoCost():updateBuyCost(); });
+});
+
+// ════════════════════════════════════════════════════
+// START
+// ════════════════════════════════════════════════════
+window.addEventListener("load", initApp);
+</script>
+</body>
+</html>
